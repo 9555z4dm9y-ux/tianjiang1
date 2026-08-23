@@ -312,6 +312,136 @@ html, body {
   font-size: 13px;
 }
 
+/* ============ 用药卡片 & 周几标签 ============ */
+.med-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pink-deep);
+  margin: 4px 0 8px;
+}
+.med-section-title.dim {
+  color: var(--text-light);
+}
+.med-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.med-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff 0%, #fff5f9 100%);
+  cursor: pointer;
+  border: 1px solid #ffe5ef;
+  transition: background .2s;
+}
+.med-item.done {
+  background: linear-gradient(135deg, #fff 0%, #eafbe9 100%);
+  border-color: #c6ecc4;
+}
+.med-item.is-rest {
+  opacity: .7;
+  background: #fafafa;
+  border-color: #eee;
+}
+.med-info {
+  flex: 1;
+  min-width: 0;
+}
+.med-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+.med-rest-tag {
+  font-size: 10px;
+  color: var(--text-light);
+  background: #eee;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.med-wd-row {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.wd-pill {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+.wd-pill.on {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+  font-weight: 600;
+}
+.wd-pill.off {
+  background: #f5f5f5;
+  color: #bbb;
+  text-decoration: line-through;
+}
+.wd-pill.today {
+  border-color: var(--pink-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(255,107,157,.15);
+}
+/* 用药设置弹窗里的一行 */
+.med-edit-tip {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: var(--pink-soft);
+  border-radius: 8px;
+}
+.med-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  background: #fafafa;
+  margin-bottom: 6px;
+}
+.med-edit-name {
+  flex: 1;
+  min-width: 0;
+}
+.wd-check-row {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.wd-check {
+  font-size: 11px;
+  padding: 3px 5px;
+  border-radius: 6px;
+  background: #eee;
+  color: #aaa;
+  cursor: pointer;
+  user-select: none;
+  min-width: 22px;
+  text-align: center;
+  font-weight: 600;
+  transition: all .15s;
+}
+.wd-check.on {
+  background: var(--pink);
+  color: #fff;
+}
+
 /* 代办列表 */
 .todo-item {
   display: flex;
@@ -1226,6 +1356,17 @@ html, body {
   border-radius: 10px;
   line-height: 1.5;
 }
+.app-ver-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--pink-soft);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.app-ver-label { color: var(--text-light); }
+.app-ver-val { font-weight: 700; color: var(--pink-deep); }
 
 /* ============ 突发奇想/生活tips ============ */
 .tips-card.tips-sudden {
@@ -1286,6 +1427,28 @@ html, body {
 .shop-card {
   background: linear-gradient(135deg, #fff 0%, #fff5f9 100%);
 }
+.shop-add-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 6px;
+}
+.shop-add-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.shop-sub {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.input-sm, .select-sm {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 8px;
+}
 .shop-section { margin-bottom: 12px; }
 .shop-section-title {
   font-size: 13px;
@@ -1297,35 +1460,72 @@ html, body {
 }
 .shop-section.shop-done .shop-section-title { color: var(--text-light); }
 .shop-group {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   background: var(--pink-soft);
-  border-radius: 10px;
-  padding: 8px 10px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 .shop-group-head {
   display: flex;
-  justify-content: space-between;
-  font-size: 12px;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--pink-deep);
-  margin-bottom: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .2s;
+}
+.shop-group-head:hover {
+  background: rgba(255, 107, 157, .08);
+}
+.shop-group-arrow {
+  font-size: 10px;
+  color: var(--pink);
+  transition: transform .2s;
+  width: 14px;
+  text-align: center;
+}
+.shop-group-label {
+  flex: 1;
 }
 .shop-group-cnt {
   background: #fff;
   color: var(--pink);
-  padding: 1px 7px;
-  border-radius: 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
   font-size: 11px;
+  font-weight: 500;
+}
+.shop-group-body {
+  padding: 2px 10px 10px;
+  overflow: hidden;
+  animation: slideDown .25s ease;
+}
+.shop-group-body.is-collapsed {
+  display: none;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.shop-group-done {
+  background: #f2f2f2;
+}
+.shop-group-done .shop-group-head {
+  color: var(--text-light);
 }
 .shop-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   background: #fff;
   border-radius: 10px;
   margin-bottom: 6px;
 }
+.shop-item:last-child { margin-bottom: 0; }
 .shop-item-done .shop-name {
   text-decoration: line-through;
   color: var(--text-light);
@@ -1349,7 +1549,7 @@ html, body {
   font-size: 12px;
   color: var(--pink-deep);
   background: var(--pink-soft);
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 6px;
 }
 .shop-shop {
@@ -1357,6 +1557,33 @@ html, body {
   color: var(--text-light);
 }
 .shop-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+/* 分类管理 */
+.shop-cat-mgr {
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.shop-cat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  background: #fff;
+}
+.shop-cat-row:last-child { border-bottom: none; }
+.shop-cat-ops {
+  display: flex;
+  gap: 4px;
+}
+.btn-xs {
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  min-width: 28px;
+}
 
 /* ============ 过期提醒 ============ */
 .expire-summary {
@@ -1550,6 +1777,261 @@ html, body {
   cursor: pointer;
   z-index: 3;
 }
+/* ============ 相册分类 ============ */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+}
+.cat-folder {
+  cursor: pointer;
+  text-align: center;
+}
+.cat-cover {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--pink-soft);
+  box-shadow: 0 2px 10px rgba(255, 182, 193, 0.25);
+  transition: transform 0.15s;
+}
+.cat-folder:active .cat-cover { transform: scale(0.96); }
+.cat-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cat-cover-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--pink-soft), #fff0f5);
+}
+.cat-emoji {
+  font-size: 42px;
+}
+.cat-count {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 1;
+}
+.cat-name {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cat-icon-picker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+.cat-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border-radius: 10px;
+  background: var(--pink-soft);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cat-icon.active {
+  background: var(--pink);
+  transform: scale(1.1);
+}
+.cat-image-list {
+  margin-top: 8px;
+}
+.cat-img-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.cat-img-item {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--pink-soft);
+}
+.cat-img-item img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cat-detail-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.cat-detail-actions .media-pick-btn,
+.cat-detail-actions .btn {
+  font-size: 13px;
+  padding: 6px 12px;
+}
+.cat-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.cat-detail-item {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--pink-soft);
+}
+.cat-detail-item img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* ============ 分账本详情 ============ */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pink-deep);
+  padding: 4px 2px;
+  margin: 12px 0 6px;
+  border-left: 3px solid var(--pink);
+  padding-left: 8px;
+}
+.stat-row.small { gap: 6px; margin-bottom: 6px; }
+.stat-box.tiny {
+  padding: 8px 4px;
+  min-width: 56px;
+  border-radius: 10px;
+}
+.stat-box.tiny .num { font-size: 14px; }
+.stat-box.tiny .label { font-size: 10px; }
+.ledger-detail {
+  background: var(--pink-soft);
+  border-radius: 12px;
+  padding: 8px;
+  margin: 4px 0 10px;
+}
+.ledger-item { margin-bottom: 0; border-bottom: none !important; }
+/* ============ 账本历史查询 ============ */
+.query-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+.query-input {
+  flex: 1;
+}
+.empty-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  padding: 6px 2px;
+  margin-bottom: 4px;
+}
+
+/* ============ 行程日程 ============ */
+.trip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px 10px 10px;
+  margin: 6px 0;
+  background: var(--pink-soft);
+  border-radius: 12px;
+  position: relative;
+}
+.trip-item .item-main { flex: 1; min-width: 0; }
+.trip-item .item-title { margin-bottom: 4px; word-break: break-word; }
+.trip-item .item-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 10px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+.tag-now {
+  background: var(--pink);
+  color: white;
+}
+.trip-color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.trip-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #444;
+  padding: 0;
+  line-height: 1;
+}
+.trip-color.active {
+  border-color: var(--pink-deep);
+  box-shadow: 0 0 0 2px rgba(255,158,192,0.3);
+}
+.empty-sub {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ============ 体重体脂/围度扩展 ============ */
+.wd-body {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.wd-body span {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--pink-mint);
+  color: var(--text-light);
+}
 
   </style>
 </head>
@@ -1630,8 +2112,17 @@ const Store = {
   // 每月计划
   getMonthly() { return DB.get('monthly', []); },
   setMonthly(v) { DB.set('monthly', v); },
-  // 用药清单设置
-  getMedList() { return DB.get('medList', ['维生素', '钙片']); },
+  // 用药清单设置（对象数组：[{id, name, weekDays:[0..6]}]，空 weekDays 表示每天吃）
+  getMedList() {
+    const raw = DB.get('medList', ['维生素', '钙片']);
+    // 旧数据迁移：字符串数组 → 对象数组
+    if (raw.length && typeof raw[0] === 'string') {
+      const migrated = raw.map(n => ({ id: uid(), name: n, weekDays: [0,1,2,3,4,5,6] }));
+      DB.set('medList', migrated);
+      return migrated;
+    }
+    return raw || [];
+  },
   setMedList(v) { DB.set('medList', v); },
   // 记账
   getAccounts() { return DB.get('accounts', []); },
@@ -1642,7 +2133,10 @@ const Store = {
   // 宝宝成长
   getBaby() { return DB.get('baby', []); },
   setBaby(v) { DB.set('baby', v); },
-  // 体重: [{id, date, weight, timeOfDay:'morning'|'evening', note}]
+  // 宝宝成长-分类相册 [{id, name, icon, images:[{id, type, data}], createTime}]
+  getBabyCats() { return DB.get('babyCats', []); },
+  setBabyCats(v) { DB.set('babyCats', v); },
+  // 体重: [{id, date, weight, timeOfDay:'morning'|'evening', note, bodyFat, waist, arm, thigh}]
   getWeights() { return DB.get('weights', []); },
   setWeights(v) { DB.set('weights', v); },
   getWeightsByDate(date) {
@@ -1662,6 +2156,9 @@ const Store = {
   // 衣物
   getClothes() { return DB.get('clothes', []); },
   setClothes(v) { DB.set('clothes', v); },
+  // 行程日程: [{id, title, startDate, endDate, startTime, endTime, note, color}]
+  getTrips() { return DB.get('trips', []); },
+  setTrips(v) { DB.set('trips', v); },
   // 消耗品
   getConsumables() { return DB.get('consumables', []); },
   setConsumables(v) { DB.set('consumables', v); },
@@ -1712,7 +2209,18 @@ const Store = {
   setTipsLife(v) { DB.set('tipsLife', v); },
   // 待购物清单
   getShop() { return DB.get('shop', []); },
-  setShop(v) { DB.set('shop', v); }
+  setShop(v) { DB.set('shop', v); },
+  // 待购物分类（预设 + 自定义）
+  getShopCats() { return DB.get('shopCats', ['生鲜果蔬', '日用百货', '零食饮料', '服饰美妆', '母婴用品', '数码家电', '其他']); },
+  setShopCats(v) { DB.set('shopCats', v); },
+  // 待购物折叠状态（展开的分类名集合，字符串数组）
+  getShopCollapsed() { return DB.get('shopCollapsed', []); },
+  setShopCollapsed(v) { DB.set('shopCollapsed', v); },
+  getShopCollapsedDone() { return DB.get('shopCollapsedDone', []); },
+  setShopCollapsedDone(v) { DB.set('shopCollapsedDone', v); },
+  // 账本历史查询: { month: 'YYYY-MM', year: 'YYYY' }
+  getLedgerQuery() { return DB.get('ledgerQuery', { month: '', year: '' }); },
+  setLedgerQuery(v) { DB.set('ledgerQuery', v); }
 };
 
 // ---------- 早睡辅助 ----------
@@ -1782,6 +2290,16 @@ let reminderShown = null; // 今日提醒是否展示过的日期
 let notifyTimer = null;   // 定时提醒定时器
 
 // ---------- 统计工具 ----------
+// 某药品在某日期/周几是否要吃
+// wd: 0..6 (周日..周六)；weekDays 为 undefined/null/空数组 视为每天
+function medDueOn(med, wd) {
+  if (!med || !med.weekDays || !med.weekDays.length) return true;
+  return med.weekDays.includes(wd);
+}
+// 根据日期串返回周几数字 0..6
+function dateWd(dateStr) {
+  return new Date(dateStr.replace(/-/g, '/')).getDay();
+}
 // 计算某天三模块的完成率 {medPct, routinePct, todoPct, overall, tasksTotal, tasksDone}
 // routine 空的话不算
 function dailyStats(dateStr) {
@@ -1791,7 +2309,10 @@ function dailyStats(dateStr) {
   const meds = day.meds || {};
   const rMap = day.routine || {};
   const todos = day.todos || [];
-  const medDone = medList.filter(m => meds[m]).length;
+  const wd = dateWd(dateStr);
+  // 今日需服药的药品列表
+  const todaysMeds = medList.filter(m => medDueOn(m, wd));
+  const medDone = todaysMeds.filter(m => meds[m.id] || meds[m.name]).length;
   const rDone = routine.filter(r => rMap[r.id]).length;
   const tDone = todos.filter(t => t.done).length;
   // 早睡：若当天有记录则算一项
@@ -1802,10 +2323,10 @@ function dailyStats(dateStr) {
   // 如果是今天，还没到18点且没打卡，不计入分母（还没到睡的时候）
   if (dateStr === D.today() && !sleepHas && new Date().getHours() < 18) sleepTotal = 0;
 
-  const tasksTotal = medList.length + routine.length + todos.length + sleepTotal;
+  const tasksTotal = todaysMeds.length + routine.length + todos.length + sleepTotal;
   const tasksDone = medDone + rDone + tDone + sleepOK;
   return {
-    medPct: medList.length ? medDone / medList.length : null,
+    medPct: todaysMeds.length ? medDone / todaysMeds.length : null,
     routinePct: routine.length ? rDone / routine.length : null,
     todoPct: todos.length ? tDone / todos.length : null,
     sleepPct: sleepHas ? (sleepOK ? 100 : 0) : null,
@@ -1893,6 +2414,8 @@ function weekStats(days = 7) {
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 function $(sel) { return document.querySelector(sel); }
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function escapeAttr(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
 // 读取图片为base64
 function readImg(file) {
@@ -1989,9 +2512,12 @@ function renderHome() {
   const day = Store.getDay(today);
   const medList = Store.getMedList();
   const routine = Store.getRoutine();
+  const wd = dateWd(today);
+  // 今日需服药
+  const todaysMeds = medList.filter(m => medDueOn(m, wd));
   // 用药打卡
   const meds = day.meds || {};
-  const medDone = medList.filter(m => meds[m]).length;
+  const medDone = todaysMeds.filter(m => meds[m.id] || meds[m.name]).length;
   // 每日例行
   const routineMap = day.routine || {};
   const routineDone = routine.filter(r => routineMap[r.id]).length;
@@ -2013,7 +2539,7 @@ function renderHome() {
   const isLate = new Date().getHours() >= 18 || todaySleep; // 晚6点后或已打卡，早睡纳入考核
   const sleepTotal = isLate ? 1 : 0;
   const sleepDone = sleepAchieved ? 1 : 0;
-  const totalTasks = medList.length + routine.length + todos.length + sleepTotal;
+  const totalTasks = todaysMeds.length + routine.length + todos.length + sleepTotal;
   const totalDone = medDone + routineDone + todoDone + sleepDone;
   const totalPct = totalTasks ? Math.round(totalDone / totalTasks * 100) : 0;
 
@@ -2027,7 +2553,7 @@ function renderHome() {
       </div>
     </div>
     <div class="stat-row">
-      <div class="stat-box"><div class="num">${medDone}/${medList.length}</div><div class="label">用药</div></div>
+      <div class="stat-box"><div class="num">${medDone}/${todaysMeds.length}</div><div class="label">用药</div></div>
       <div class="stat-box"><div class="num">${routineDone}/${routine.length}</div><div class="label">每日计划</div></div>
       <div class="stat-box"><div class="num">${todoDone}/${todos.length || 0}</div><div class="label">代办</div></div>
       <div class="stat-box"><div class="num">${isLate ? (sleepDone ? '✓' : '✗') : '⏰'}</div><div class="label">早睡</div></div>
@@ -2111,13 +2637,52 @@ function renderHome() {
   if (medList.length === 0) {
     h += `<div class="empty"><span class="emoji">💊</span>还没有添加药品，点击右上角设置</div>`;
   } else {
-    h += `<div class="check-grid">`;
-    medList.forEach(m => {
-      const done = !!meds[m];
-      h += `<div class="check-item ${done ? 'done' : ''}" onclick="toggleMed('${esc(m)}')">
-        <div class="check-circle">${done ? '✓' : ''}</div><div class="check-text">${esc(m)}</div></div>`;
-    });
-    h += `</div>`;
+    const dueToday = medList.filter(m => medDueOn(m, wd));
+    const restToday = medList.filter(m => !medDueOn(m, wd));
+    // 辅助：渲染一周7天的小徽章
+    const renderWD = (m) => {
+      const full = (!m.weekDays || !m.weekDays.length);
+      return ['一','二','三','四','五','六','日'].map((ch, i) => {
+        // Monday = 0 of index here -> JS wd 1..6, then Sunday = 6 -> JS wd 0
+        const jsWd = i === 6 ? 0 : i + 1;
+        const on = full || (m.weekDays || []).includes(jsWd);
+        const isToday = jsWd === wd;
+        return `<span class="wd-pill ${on ? 'on' : 'off'} ${isToday ? 'today' : ''}">${ch}</span>`;
+      }).join('');
+    };
+    const dueKey = (m) => (m.id || m.name);
+    if (dueToday.length) {
+      h += `<div class="med-section-title">📍 今日服用（${dueToday.length} 种）</div>`;
+      h += `<div class="med-grid">`;
+      dueToday.forEach(m => {
+        const key = dueKey(m);
+        const done = !!meds[key] || !!meds[m.name];
+        h += `<div class="med-item ${done ? 'done' : ''}" onclick="toggleMed('${escapeAttr(key)}')">
+          <div class="check-circle">${done ? '✓' : ''}</div>
+          <div class="med-info">
+            <div class="med-name">${escapeHtml(m.name)}</div>
+            <div class="med-wd-row">${renderWD(m)}</div>
+          </div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+    if (restToday.length) {
+      h += `<div class="med-section-title dim">💤 今日不用吃（${restToday.length} 种）</div>`;
+      h += `<div class="med-grid">`;
+      restToday.forEach(m => {
+        const key = dueKey(m);
+        const done = !!meds[key] || !!meds[m.name];
+        h += `<div class="med-item is-rest ${done ? 'done' : ''}" onclick="toggleMed('${escapeAttr(key)}')">
+          <div class="check-circle">${done ? '✓' : ''}</div>
+          <div class="med-info">
+            <div class="med-name">${escapeHtml(m.name)} <span class="med-rest-tag">今日休息</span></div>
+            <div class="med-wd-row">${renderWD(m)}</div>
+          </div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
   }
   h += `</div>`;
 
@@ -2238,30 +2803,127 @@ function renderHome() {
 
 function navTo(tab) { currentTab = tab; render(); }
 
-// 用药打卡
-function toggleMed(name) {
+// 用药打卡（key 可能是 id 或 name，兼容旧数据）
+function toggleMed(key) {
   const today = D.today();
   const day = Store.getDay(today);
   day.meds = day.meds || {};
-  day.meds[name] = !day.meds[name];
+  const list = Store.getMedList();
+  const med = list.find(m => m.id === key || m.name === key);
+  if (!med) return;
+  // 切换前判断是否今天原本不用吃
+  const wd = dateWd(today);
+  const willTurnOn = !(day.meds[med.id] || day.meds[med.name]);
+  if (willTurnOn && !medDueOn(med, wd)) {
+    if (!confirm(`${med.name} 今天（周${D.wd(today)}）本来不用吃，确定要记一笔吗？`)) return;
+  }
+  // 统一存 key 为 id
+  day.meds[med.id] = !day.meds[med.id] && !day.meds[med.name];
+  delete day.meds[med.name]; // 清理旧格式
   Store.setDay(today, day);
+  toast(day.meds[med.id] ? '✅ 已记一笔：吃过啦' : '🔄 已取消：还没吃哦');
   render();
 }
 
 function editMedList() {
   const medList = Store.getMedList();
+  // 拷贝一份到临时变量防止直接修改
+  const wdLabels = ['一','二','三','四','五','六','日'];
+  const wdValues = [1,2,3,4,5,6,0]; // JS getDay
+  let rows = '';
+  medList.forEach((m, idx) => {
+    const wds = m.weekDays && m.weekDays.length ? m.weekDays : [0,1,2,3,4,5,6];
+    const pill = wdLabels.map((ch, i) => {
+      const v = wdValues[i];
+      const on = wds.includes(v);
+      return `<label class="wd-check ${on ? 'on' : ''}" onclick="this.classList.toggle('on');const inp=this.querySelector('input');inp.checked=!inp.checked">
+        <input type="checkbox" ${on ? 'checked' : ''} value="${v}" style="display:none"/>${ch}</label>`;
+    }).join('');
+    rows += `<div class="med-edit-row" data-idx="${idx}">
+      <button class="btn btn-xs btn-danger" onclick="medEditDel(this)" title="删除">×</button>
+      <input class="input med-edit-name" placeholder="药品名称" value="${escapeAttr(m.name)}"/>
+      <div class="wd-check-row">${pill}
+        <button class="btn btn-xs btn-ghost" onclick="medEditAllWeek(this)" title="全选一周">全</button>
+        <button class="btn btn-xs btn-ghost" onclick="medEditWeekday(this)" title="仅工作日">工</button>
+      </div>
+    </div>`;
+  });
   openModal(`
-    <div class="modal-head"><h3>用药清单设置</h3><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="field"><label>每行一个药品名称</label>
-      <textarea class="textarea" id="medText" rows="5">${medList.join('\n')}</textarea>
-    </div>
+    <div class="modal-head"><h3>💊 用药清单 & 每周安排</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="med-edit-tip">每行一种药，勾选周几需要吃（工 = 周一~周五，全 = 一~日）</div>
+    <div id="medEditRows">${rows}</div>
+    <button class="btn btn-block btn-ghost" onclick="medEditAddRow()">+ 添加一种药</button>
     <button class="btn btn-block" onclick="saveMedList()">保存</button>
   `);
 }
+function medEditDel(btn) {
+  const row = btn.closest('.med-edit-row');
+  if (!row) return;
+  const name = row.querySelector('.med-edit-name')?.value || '';
+  if (name && !confirm(`删除「${name}」？`)) return;
+  row.remove();
+}
+function medEditAddRow() {
+  const wdLabels = ['一','二','三','四','五','六','日'];
+  const wdValues = [1,2,3,4,5,6,0];
+  const pill = wdLabels.map((ch, i) => {
+    const v = wdValues[i];
+    const on = true; // 默认全选
+    return `<label class="wd-check ${on ? 'on' : ''}" onclick="this.classList.toggle('on');const inp=this.querySelector('input');inp.checked=!inp.checked">
+      <input type="checkbox" ${on ? 'checked' : ''} value="${v}" style="display:none"/>${ch}</label>`;
+  }).join('');
+  const row = document.createElement('div');
+  row.className = 'med-edit-row';
+  row.innerHTML = `<button class="btn btn-xs btn-danger" onclick="medEditDel(this)" title="删除">×</button>
+    <input class="input med-edit-name" placeholder="药品名称"/>
+    <div class="wd-check-row">${pill}
+      <button class="btn btn-xs btn-ghost" onclick="medEditAllWeek(this)" title="全选一周">全</button>
+      <button class="btn btn-xs btn-ghost" onclick="medEditWeekday(this)" title="仅工作日">工</button>
+    </div>`;
+  $('#medEditRows').appendChild(row);
+}
+function medEditAllWeek(btn) {
+  const row = btn.closest('.wd-check-row');
+  if (!row) return;
+  row.querySelectorAll('.wd-check').forEach(el => {
+    el.classList.add('on');
+    const inp = el.querySelector('input');
+    if (inp) inp.checked = true;
+  });
+}
+function medEditWeekday(btn) {
+  const row = btn.closest('.wd-check-row');
+  if (!row) return;
+  row.querySelectorAll('.wd-check').forEach((el, i) => {
+    const on = i < 5; // 一 二 三 四 五
+    el.classList.toggle('on', on);
+    const inp = el.querySelector('input');
+    if (inp) inp.checked = on;
+  });
+}
 function saveMedList() {
-  const text = $('#medText').value.trim();
-  Store.setMedList(text ? text.split('\n').map(s => s.trim()).filter(Boolean) : []);
+  const oldList = Store.getMedList();
+  const result = [];
+  const rows = document.querySelectorAll('#medEditRows .med-edit-row');
+  rows.forEach((row, idx) => {
+    const nameInput = row.querySelector('.med-edit-name');
+    const name = (nameInput?.value || '').trim();
+    if (!name) return;
+    const wdVals = [];
+    row.querySelectorAll('.wd-check input:checked').forEach(cb => wdVals.push(Number(cb.value)));
+    // 保留原来的 id，避免旧数据脱节（按名字匹配优先，否则按顺序）
+    let id;
+    const found = oldList.find(m => m.name === name);
+    id = found ? found.id : (oldList[idx]?.id || uid());
+    result.push({
+      id,
+      name,
+      weekDays: wdVals.length === 7 || !wdVals.length ? [0,1,2,3,4,5,6] : wdVals.sort()
+    });
+  });
+  Store.setMedList(result);
   closeModal();
+  toast('✅ 已保存用药安排');
   render();
 }
 
@@ -2669,6 +3331,8 @@ function openDay(dateStr) {
   const todos = day.todos || [];
   const medList = Store.getMedList();
   const meds = day.meds || {};
+  const wd = dateWd(dateStr);
+  const todaysMeds = medList.filter(m => medDueOn(m, wd));
   const calRecords = day.calories?.records || [];
   let h = `<div class="modal-head"><h3>${D.fmt(dateStr)}</h3><button class="modal-close" onclick="closeModal();render()">×</button></div>`;
   // 日记输入
@@ -2704,11 +3368,21 @@ function openDay(dateStr) {
     });
   }
   // 用药打卡
-  const medDone = medList.filter(m => meds[m]).length;
-  if (medList.length) {
-    h += `<div class="section-head">💊 用药 ${medDone}/${medList.length}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">`;
-    medList.forEach(m => {
-      h += `<span class="tag ${meds[m] ? 'tag-green' : ''}">${esc(m)}${meds[m] ? '✓' : ''}</span>`;
+  const done = (m) => !!(meds[m.id] || meds[m.name]);
+  const medDone = todaysMeds.filter(done).length;
+  if (todaysMeds.length) {
+    h += `<div class="section-head">💊 用药 ${medDone}/${todaysMeds.length}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">`;
+    todaysMeds.forEach(m => {
+      h += `<span class="tag ${done(m) ? 'tag-green' : ''}">${escapeHtml(m.name)}${done(m) ? '✓' : ''}</span>`;
+    });
+    h += `</div>`;
+  }
+  // 今日不用吃的药（灰字显示也一起给用户参考）
+  const restMeds = medList.filter(m => !medDueOn(m, wd));
+  if (restMeds.length) {
+    h += `<div class="section-head" style="color:var(--text-light);font-size:12px">💤 今日休息（${restMeds.length} 种）</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">`;
+    restMeds.forEach(m => {
+      h += `<span class="tag" style="opacity:.55">${escapeHtml(m.name)}${done(m) ? '✓' : ''}</span>`;
     });
     h += `</div>`;
   }
@@ -2895,9 +3569,12 @@ function pendingSummary() {
   const rMap = day.routine || {};
   const todos = day.todos || [];
   const tasks = [];
-  const medDone = medList.filter(m => meds[m]).length;
-  if (medList.length && medDone < medList.length) {
-    tasks.push({ type: '用药', text: `还剩 ${medList.length - medDone} 项`, count: medList.length - medDone });
+  const wd = dateWd(today);
+  const todaysMeds = medList.filter(m => medDueOn(m, wd));
+  const done = (m) => !!(meds[m.id] || meds[m.name]);
+  const medDone = todaysMeds.filter(done).length;
+  if (todaysMeds.length && medDone < todaysMeds.length) {
+    tasks.push({ type: '用药', text: `还剩 ${todaysMeds.length - medDone} 项`, count: todaysMeds.length - medDone });
   }
   const rDone = routine.filter(r => rMap[r.id]).length;
   if (routine.length && rDone < routine.length) {
@@ -3116,26 +3793,143 @@ function renderAccount() {
     const subLeds = ledgers.filter(l => l.type === 'sub');
     let sumIn = accounts.filter(a => a.type === 'income').reduce((s, a) => s + Number(a.amount), 0);
     let sumOut = accounts.filter(a => a.type !== 'income').reduce((s, a) => s + Number(a.amount), 0);
+    // 日/月/年统计（按交易日期）
+    const today = D.today();
+    const thisMonth = today.slice(0, 7);
+    const thisYear = today.slice(0, 4);
+    const sum = (arr, type) => arr.filter(a => type === 'in' ? a.type === 'income' : a.type !== 'income').reduce((s, a) => s + Number(a.amount), 0);
+    const dayIn = sum(accounts.filter(a => a.date === today), 'in');
+    const dayOut = sum(accounts.filter(a => a.date === today), 'out');
+    const monthIn = sum(accounts.filter(a => a.date?.startsWith(thisMonth)), 'in');
+    const monthOut = sum(accounts.filter(a => a.date?.startsWith(thisMonth)), 'out');
+    const yearIn = sum(accounts.filter(a => a.date?.startsWith(thisYear)), 'in');
+    const yearOut = sum(accounts.filter(a => a.date?.startsWith(thisYear)), 'out');
+    // 历史查询
+    const q = Store.getLedgerQuery();
+    const qMonth = q.month || '';
+    const qYear = q.year || '';
+    const statByPrefix = (accs, prefix) => {
+      const filt = accs.filter(a => a.date?.startsWith(prefix));
+      return {
+        in: sum(filt, 'in'),
+        out: sum(filt, 'out'),
+        bal: sum(filt, 'in') - sum(filt, 'out')
+      };
+    };
+    const qmStat = qMonth ? statByPrefix(accounts, qMonth) : null;
+    const qyStat = qYear ? statByPrefix(accounts, qYear) : null;
+    const qmLedgerStat = (ledgerId) => {
+      if (!qMonth) return null;
+      const la = accounts.filter(a => !ledgerId || a.ledger === ledgerId);
+      return statByPrefix(la, qMonth);
+    };
+    const qyLedgerStat = (ledgerId) => {
+      if (!qYear) return null;
+      const la = accounts.filter(a => !ledgerId || a.ledger === ledgerId);
+      return statByPrefix(la, qYear);
+    };
+    // 构造年度选项（最早记录年份 ~ 今年）
+    const allYears = new Set();
+    allYears.add(thisYear);
+    accounts.forEach(a => { if (a.date) allYears.add(a.date.slice(0, 4)); });
+    const yearOptions = Array.from(allYears).sort().reverse();
     body = `<div class="card"><div class="card-title"><span class="title-left">📚 账本总览</span>
       <button class="btn btn-ghost btn-sm" onclick="addLedger()">+ 分账本</button></div>
-      <div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${sumIn.toFixed(0)}</div><div class="label">总收入</div></div>
-        <div class="stat-box"><div class="num profit-neg">¥${sumOut.toFixed(0)}</div><div class="label">总支出</div></div>
-        <div class="stat-box"><div class="num">¥${(sumIn - sumOut).toFixed(0)}</div><div class="label">结余</div></div></div>`;
+      <div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${sumIn.toFixed(0)}</div><div class="label">累计收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${sumOut.toFixed(0)}</div><div class="label">累计支出</div></div>
+        <div class="stat-box"><div class="num">¥${(sumIn - sumOut).toFixed(0)}</div><div class="label">累计结余</div></div></div>
+      <div class="section-title">📅 今日</div>
+      <div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${dayIn.toFixed(0)}</div><div class="label">今日收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${dayOut.toFixed(0)}</div><div class="label">今日支出</div></div>
+        <div class="stat-box"><div class="num">¥${(dayIn - dayOut).toFixed(0)}</div><div class="label">今日结余</div></div></div>
+      <div class="section-title">📆 本月</div>
+      <div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${monthIn.toFixed(0)}</div><div class="label">本月收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${monthOut.toFixed(0)}</div><div class="label">本月支出</div></div>
+        <div class="stat-box"><div class="num">¥${(monthIn - monthOut).toFixed(0)}</div><div class="label">本月结余</div></div></div>
+      <div class="section-title">🗓 今年</div>
+      <div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${yearIn.toFixed(0)}</div><div class="label">今年收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${yearOut.toFixed(0)}</div><div class="label">今年支出</div></div>
+        <div class="stat-box"><div class="num">¥${(yearIn - yearOut).toFixed(0)}</div><div class="label">今年结余</div></div></div>
+      <div class="section-title">📊 月度查询</div>
+      <div class="query-row">
+        <input class="input query-input" type="month" id="qMonth" value="${escapeAttr(qMonth)}" onchange="setQueryMonth(this.value)">
+        <button class="btn btn-ghost btn-sm" onclick="setQueryMonth('')">清除</button>
+      </div>
+      ${qmStat ? `<div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${qmStat.in.toFixed(0)}</div><div class="label">月收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${qmStat.out.toFixed(0)}</div><div class="label">月支出</div></div>
+        <div class="stat-box"><div class="num">¥${qmStat.bal.toFixed(0)}</div><div class="label">月结余</div></div></div>` : `<div class="empty-sub">请选择月份查看该月收支明细</div>`}
+      <div class="section-title">📊 年度查询</div>
+      <div class="query-row">
+        <select class="select query-input" id="qYear" onchange="setQueryYear(this.value)">
+          <option value="">选择年份</option>
+          ${yearOptions.map(y => `<option value="${y}" ${qYear === y ? 'selected' : ''}>${y}年</option>`).join('')}
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="setQueryYear('')">清除</button>
+      </div>
+      ${qyStat ? `<div class="stat-row"><div class="stat-box"><div class="num profit-pos">¥${qyStat.in.toFixed(0)}</div><div class="label">年收入</div></div>
+        <div class="stat-box"><div class="num profit-neg">¥${qyStat.out.toFixed(0)}</div><div class="label">年支出</div></div>
+        <div class="stat-box"><div class="num">¥${qyStat.bal.toFixed(0)}</div><div class="label">年结余</div></div></div>` : `<div class="empty-sub">请选择年份查看该年收支明细</div>`}
+      <div class="section-title">🏦 分账本详情</div>`;
+    // 总账本（带日历）
+    const renderLedStats = (ledgerId) => {
+      const la = accounts.filter(a => !ledgerId || a.ledger === ledgerId);
+      const laIn = la.filter(a => a.type === 'income');
+      const laOut = la.filter(a => a.type !== 'income');
+      const lin = laIn.reduce((s,a)=>s+Number(a.amount),0);
+      const lout = laOut.reduce((s,a)=>s+Number(a.amount),0);
+      const din = laIn.filter(a => a.date === today).reduce((s,a)=>s+Number(a.amount),0);
+      const dout = laOut.filter(a => a.date === today).reduce((s,a)=>s+Number(a.amount),0);
+      const min = laIn.filter(a => a.date?.startsWith(thisMonth)).reduce((s,a)=>s+Number(a.amount),0);
+      const mout = laOut.filter(a => a.date?.startsWith(thisMonth)).reduce((s,a)=>s+Number(a.amount),0);
+      const yin = laIn.filter(a => a.date?.startsWith(thisYear)).reduce((s,a)=>s+Number(a.amount),0);
+      const yout = laOut.filter(a => a.date?.startsWith(thisYear)).reduce((s,a)=>s+Number(a.amount),0);
+      const qmLs = qmLedgerStat(ledgerId);
+      const qyLs = qyLedgerStat(ledgerId);
+      return `<div class="ledger-detail">
+        <div class="stat-row small">
+          <div class="stat-box tiny"><div class="num profit-pos">¥${din.toFixed(0)}</div><div class="label">今日收</div></div>
+          <div class="stat-box tiny"><div class="num profit-neg">¥${dout.toFixed(0)}</div><div class="label">今日支</div></div>
+          <div class="stat-box tiny"><div class="num">¥${(din-dout).toFixed(0)}</div><div class="label">今结</div></div>
+        </div>
+        <div class="stat-row small">
+          <div class="stat-box tiny"><div class="num profit-pos">¥${min.toFixed(0)}</div><div class="label">本月收</div></div>
+          <div class="stat-box tiny"><div class="num profit-neg">¥${mout.toFixed(0)}</div><div class="label">本月支</div></div>
+          <div class="stat-box tiny"><div class="num">¥${(min-mout).toFixed(0)}</div><div class="label">月结</div></div>
+        </div>
+        <div class="stat-row small">
+          <div class="stat-box tiny"><div class="num profit-pos">¥${yin.toFixed(0)}</div><div class="label">本年收</div></div>
+          <div class="stat-box tiny"><div class="num profit-neg">¥${yout.toFixed(0)}</div><div class="label">本年支</div></div>
+          <div class="stat-box tiny"><div class="num">¥${(yin-yout).toFixed(0)}</div><div class="label">年结</div></div>
+        </div>
+        ${qmLs ? `<div class="stat-row small">
+          <div class="stat-box tiny"><div class="num profit-pos">¥${qmLs.in.toFixed(0)}</div><div class="label">${qMonth}收</div></div>
+          <div class="stat-box tiny"><div class="num profit-neg">¥${qmLs.out.toFixed(0)}</div><div class="label">${qMonth}支</div></div>
+          <div class="stat-box tiny"><div class="num">¥${qmLs.bal.toFixed(0)}</div><div class="label">该月结</div></div>
+        </div>` : ''}
+        ${qyLs ? `<div class="stat-row small">
+          <div class="stat-box tiny"><div class="num profit-pos">¥${qyLs.in.toFixed(0)}</div><div class="label">${qYear}收</div></div>
+          <div class="stat-box tiny"><div class="num profit-neg">¥${qyLs.out.toFixed(0)}</div><div class="label">${qYear}支</div></div>
+          <div class="stat-box tiny"><div class="num">¥${qyLs.bal.toFixed(0)}</div><div class="label">该年结</div></div>
+        </div>` : ''}
+      </div>`;
+    };
     // 总账本
     const totIn = accounts.filter(a => a.type === 'income' && (!a.ledger || a.ledger === 'total')).reduce((s, a) => s + Number(a.amount), 0);
     const totOut = accounts.filter(a => a.type !== 'income' && (!a.ledger || a.ledger === 'total')).reduce((s, a) => s + Number(a.amount), 0);
-    body += `<div class="list-item">
+    body += `<div class="list-item ledger-item">
       <div class="item-main"><div class="item-title">🏦 ${esc(totalLed ? totalLed.name : '总账本')}</div>
-        <div class="item-sub">收入¥${totIn.toFixed(0)} · 支出¥${totOut.toFixed(0)} · 结余¥${(totIn - totOut).toFixed(0)}</div></div></div>`;
+        <div class="item-sub">累计 收¥${totIn.toFixed(0)} · 支¥${totOut.toFixed(0)} · 结¥${(totIn - totOut).toFixed(0)}</div></div></div>`;
+    body += renderLedStats('total');
     // 分账本
     subLeds.forEach(l => {
       const lIn = accounts.filter(a => a.type === 'income' && a.ledger === l.id).reduce((s, a) => s + Number(a.amount), 0);
       const lOut = accounts.filter(a => a.type !== 'income' && a.ledger === l.id).reduce((s, a) => s + Number(a.amount), 0);
       const bal = lIn - lOut;
-      body += `<div class="list-item">
+      body += `<div class="list-item ledger-item">
         <div class="item-main"><div class="item-title">📒 ${esc(l.name)}</div>
-          <div class="item-sub">收入¥${lIn.toFixed(0)} · 支出¥${lOut.toFixed(0)} · 结余<span class="${bal >= 0 ? 'profit-pos' : 'profit-neg'}">¥${bal.toFixed(0)}</span></div></div>
+          <div class="item-sub">累计 收¥${lIn.toFixed(0)} · 支¥${lOut.toFixed(0)} · 结<span class="${bal >= 0 ? 'profit-pos' : 'profit-neg'}">¥${bal.toFixed(0)}</span></div></div>
         <button class="del-btn" onclick="delLedger('${l.id}')">×</button></div>`;
+      body += renderLedStats(l.id);
     });
     body += `</div>`;
   }
@@ -3283,6 +4077,20 @@ function delLedger(id) {
   Store.setAccounts(a);
   render();
 }
+// 账本历史查询 - 设置月份
+function setQueryMonth(val) {
+  const q = Store.getLedgerQuery();
+  q.month = val;
+  Store.setLedgerQuery(q);
+  render();
+}
+// 账本历史查询 - 设置年份
+function setQueryYear(val) {
+  const q = Store.getLedgerQuery();
+  q.year = val;
+  Store.setLedgerQuery(q);
+  render();
+}
 // 截图识别录入支出（基于 Tesseract.js 在线 OCR，离线时降级为图片附件）
 let _tessLoaded = false;
 function loadTesseract(cb) {
@@ -3368,6 +4176,7 @@ function renderGrowth() {
   const sub = subTab.growth || 'baby';
   let tabs = `<div class="sub-tabs">
     <button class="sub-tab ${sub === 'baby' ? 'active' : ''}" onclick="setSubTab('growth','baby')">👶 宝宝成长</button>
+    <button class="sub-tab ${sub === 'album' ? 'active' : ''}" onclick="setSubTab('growth','album')">📁 相册分类</button>
     <button class="sub-tab ${sub === 'weight' ? 'active' : ''}" onclick="setSubTab('growth','weight')">⚖️ 体重</button>
     <button class="sub-tab ${sub === 'babysleep' ? 'active' : ''}" onclick="setSubTab('growth','babysleep')">😴 宝宝睡眠</button>
   </div>`;
@@ -3405,6 +4214,28 @@ function renderGrowth() {
         </div>
       </div>`;
     });
+    body += `</div>`;
+  } else if (sub === 'album') {
+    const cats = Store.getBabyCats();
+    body = `<div class="card"><div class="card-title"><span class="title-left">📁 相册分类</span>
+      <button class="btn btn-ghost btn-sm" onclick="openCatModal(null)">+ 新建相册</button></div>`;
+    if (!cats.length) {
+      body += `<div class="empty"><span class="emoji">📁</span>还没有相册分类<br><span style="font-size:12px;color:var(--text-light)">点击上方按钮创建第一个分类</span></div>`;
+    } else {
+      body += `<div class="cat-grid">`;
+      cats.forEach(cat => {
+        const imgCount = cat.images ? cat.images.length : 0;
+        const cover = cat.images && cat.images[0] ? cat.images[0].data : '';
+        body += `<div class="cat-folder" onclick="openCatDetail('${cat.id}')">
+          <div class="cat-cover ${cover ? '' : 'cat-cover-empty'}">
+            ${cover ? `<img src="${cover}" alt="" loading="lazy">` : `<span class="cat-emoji">${cat.icon || '📁'}</span>`}
+            <span class="cat-count">${imgCount}</span>
+          </div>
+          <div class="cat-name">${esc(cat.name)}</div>
+        </div>`;
+      });
+      body += `</div>`;
+    }
     body += `</div>`;
   } else if (sub === 'babysleep') {
     // 宝宝睡眠记录
@@ -3489,8 +4320,20 @@ function renderGrowth() {
     // 曲线图
     if (all.length >= 2) {
       body += renderWeightChart(all);
+      body += renderBodyChart(all);
     } else if (all.length === 1) {
       body += `<div class="chart-empty">📈 至少2条记录才能看曲线图</div>`;
+    }
+    // 体脂/围度最新数据
+    const hasBody = all.some(w => w.bodyFat || w.waist || w.arm || w.thigh);
+    if (hasBody) {
+      const latestBody = all.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+      body += `<div class="stat-row">
+        ${latestBody.bodyFat ? `<div class="stat-box"><div class="num">${latestBody.bodyFat}%</div><div class="label">体脂率</div></div>` : ''}
+        ${latestBody.waist ? `<div class="stat-box"><div class="num">${latestBody.waist}</div><div class="label">腰围(cm)</div></div>` : ''}
+        ${latestBody.arm ? `<div class="stat-box"><div class="num">${latestBody.arm}</div><div class="label">臂围(cm)</div></div>` : ''}
+        ${latestBody.thigh ? `<div class="stat-box"><div class="num">${latestBody.thigh}</div><div class="label">腿围(cm)</div></div>` : ''}
+      </div>`;
     }
     // 历史记录列表（按日期分组显示早晚）
     if (!list.length) body += `<div class="empty"><span class="emoji">⚖️</span>还没有记录</div>`;
@@ -3503,6 +4346,7 @@ function renderGrowth() {
         const m = items.find(w => w.timeOfDay === 'morning');
         const e = items.find(w => w.timeOfDay === 'evening');
         const diff = (m && e) ? Number(e.weight) - Number(m.weight) : null;
+        const anyWithBody = items.find(w => w.bodyFat || w.waist || w.arm || w.thigh);
         body += `<div class="weight-day-row">
           <div class="wd-date">${D.fmt(date)}</div>
           <div class="wd-vals">
@@ -3511,6 +4355,12 @@ function renderGrowth() {
             ${items.filter(w => !w.timeOfDay).map(w => `<span class="wd-val">⚖️ ${w.weight}kg</span>`).join('')}
             ${diff != null ? `<span class="wd-diff ${diff < 0 ? 'profit-pos' : 'profit-neg'}">${diff < 0 ? '' : '+'}${diff}</span>` : ''}
           </div>
+          ${anyWithBody ? `<div class="wd-body">
+            ${anyWithBody.bodyFat ? `<span>体脂${anyWithBody.bodyFat}%</span>` : ''}
+            ${anyWithBody.waist ? `<span>腰${anyWithBody.waist}cm</span>` : ''}
+            ${anyWithBody.arm ? `<span>臂${anyWithBody.arm}cm</span>` : ''}
+            ${anyWithBody.thigh ? `<span>腿${anyWithBody.thigh}cm</span>` : ''}
+          </div>` : ''}
           ${items[0].note ? `<div class="wd-note">${esc(items[0].note)}</div>` : ''}
           <div class="wd-del">${items.map(w => `<button class="del-btn" onclick="delWeight('${w.id}')">×</button>`).join('')}</div>
         </div>`;
@@ -3518,8 +4368,8 @@ function renderGrowth() {
     }
     body += `</div>`;
   }
-  // 宝宝睡眠子tab下隐藏默认+号按钮，用专门的快捷按钮
-  if (sub === 'babysleep') return tabs + body;
+  // 宝宝睡眠/相册子tab下隐藏默认+号按钮
+  if (sub === 'babysleep' || sub === 'album') return tabs + body;
   return tabs + body + `<button class="fab" onclick="addGrowth('${sub}')">+</button>`;
 }
 // 宝宝成长记录：暂存当前编辑附件（base64），避免多次渲染丢失
@@ -3537,6 +4387,14 @@ function addGrowth(sub) {
         <option value="">⚖️ 通用</option>
       </select></div>
       <div class="field"><label>体重(kg)</label><input class="input" id="wWeight" type="number" step="0.1"></div>
+      <div class="row">
+        <div class="field"><label>体脂率(%)</label><input class="input" id="wBodyFat" type="number" step="0.1" placeholder="可选"></div>
+        <div class="field"><label>腰围(cm)</label><input class="input" id="wWaist" type="number" step="0.1" placeholder="可选"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>臂围(cm)</label><input class="input" id="wArm" type="number" step="0.1" placeholder="可选"></div>
+        <div class="field"><label>腿围(cm)</label><input class="input" id="wThigh" type="number" step="0.1" placeholder="可选"></div>
+      </div>
       <div class="field"><label>备注</label><input class="input" id="wNote" placeholder="如:早餐前"></div>
       <button class="btn btn-block" onclick="saveWeight()">保存</button>
     `);
@@ -3692,14 +4550,213 @@ function saveBaby() {
   closeModal(); render();
 }
 function delBaby(id) { Store.setBaby(Store.getBaby().filter(b => b.id !== id)); render(); }
+
+// ======== 相册分类管理 ========
+let __catDraft = null;
+function openCatModal(editId) {
+  const cats = Store.getBabyCats();
+  const cat = editId ? cats.find(c => c.id === editId) : null;
+  __catDraft = cat ? { ...cat, images: [...(cat.images || [])] } : { id: null, name: '', icon: '📁', images: [] };
+  const body = `
+    <div class="modal-head"><h3>${cat ? '✏️ 编辑相册' : '📁 新建相册'}</h3><button class="modal-close" onclick="closeModal();render()">×</button></div>
+    <div class="field"><label>相册名称</label><input class="input" id="catName" placeholder="如:满月照、日常..." value="${escapeAttr(__catDraft.name)}"></div>
+    <div class="field"><label>选择图标</label>
+      <div class="cat-icon-picker">
+        ${['📁','📷','🌸','🎀','🧸','🍼','👶','❤️','⭐','🌈','🎂','🌙','☀️','🦋'].map(ic =>
+          `<span class="cat-icon ${__catDraft.icon === ic ? 'active' : ''}" onclick="selectCatIcon('${ic}')">${ic}</span>`
+        ).join('')}
+      </div>
+    </div>
+    <div class="field">
+      <label>添加图片</label>
+      <div class="media-picker">
+        <label class="media-pick-btn">📷 选图片
+          <input type="file" accept="image/*" style="display:none" onchange="uploadCatMedia(this)">
+        </label>
+        <span class="media-tip">可添加多张图片</span>
+      </div>
+      <div class="cat-image-list" id="catImageList"></div>
+    </div>
+    ${cat ? `<button class="btn btn-ghost btn-block" style="color:var(--pink)">🗑 删除此相册</button>` : ''}
+    <button class="btn btn-block" onclick="saveCat()">${cat ? '保存修改' : '创建相册'}</button>
+  `;
+  openModal(body);
+  renderCatImageList();
+}
+function selectCatIcon(ic) {
+  if (!__catDraft) return;
+  __catDraft.icon = ic;
+  document.querySelectorAll('.cat-icon').forEach(el => el.classList.toggle('active', el.textContent === ic));
+}
+function renderCatImageList() {
+  const wrap = $('#catImageList');
+  if (!wrap || !__catDraft) return;
+  if (!__catDraft.images.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div class="cat-img-grid">` + __catDraft.images.map((m, i) => `
+    <div class="cat-img-item">
+      <img src="${m.data}" alt="">
+      <button class="media-del-btn" onclick="delCatDraftMedia(${i})">×</button>
+    </div>
+  `).join('') + `</div>`;
+}
+function delCatDraftMedia(i) {
+  if (!__catDraft) return;
+  __catDraft.images.splice(i, 1);
+  renderCatImageList();
+}
+function uploadCatMedia(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file || !__catDraft) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base = e.target.result;
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1200;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) {
+        const r = Math.min(MAX / w, MAX / h);
+        w = Math.round(w * r);
+        h = Math.round(h * r);
+      }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.8);
+      __catDraft.images.push({ id: uid(), type: 'image', data: out });
+      renderCatImageList();
+      toast('📷 已添加图片');
+    };
+    img.onerror = () => { __catDraft.images.push({ id: uid(), type: 'image', data: base }); renderCatImageList(); };
+    img.src = base;
+  };
+  reader.readAsDataURL(file);
+}
+function saveCat() {
+  const name = $('#catName').value.trim();
+  if (!name) { toast('请输入相册名称'); return; }
+  if (!__catDraft) return;
+  const cats = Store.getBabyCats();
+  if (__catDraft.id) {
+    const x = cats.find(c => c.id === __catDraft.id);
+    if (x) Object.assign(x, { name, icon: __catDraft.icon, images: __catDraft.images });
+  } else {
+    cats.push({ id: uid(), name, icon: __catDraft.icon, images: __catDraft.images, createTime: Date.now() });
+  }
+  try {
+    Store.setBabyCats(cats);
+  } catch (e) {
+    alert('❌ 保存失败：本地存储已满。\n请在「数据管理」导出备份后，删除一些旧记录再试。');
+    return;
+  }
+  __catDraft = null;
+  closeModal(); render();
+}
+function delCat(id) {
+  if (!confirm('确定删除此相册？')) return;
+  Store.setBabyCats(Store.getBabyCats().filter(c => c.id !== id));
+  __catDraft = null;
+  closeModal(); render();
+}
+function openCatDetail(catId) {
+  const cat = Store.getBabyCats().find(c => c.id === catId);
+  if (!cat) return;
+  const images = cat.images || [];
+  const body = `
+    <div class="modal-head"><h3>${esc(cat.icon)} ${esc(cat.name)}</h3><button class="modal-close" onclick="closeModal();render()">×</button></div>
+    <div class="cat-detail-actions">
+      <label class="media-pick-btn" style="cursor:pointer">📷 添加图片
+        <input type="file" accept="image/*" style="display:none" onchange="uploadCatDetailMedia(this,'${catId}')">
+      </label>
+      <button class="btn btn-ghost btn-sm" onclick="openCatModal('${catId}')">✏️ 编辑信息</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--pink)" onclick="delCat('${catId}')">🗑 删除</button>
+    </div>
+    <div class="cat-detail-grid" id="catDetailGrid">
+      ${images.length ? images.map((m, i) => `
+        <div class="cat-detail-item">
+          <img src="${m.data}" alt="" onclick="viewCatImage('${catId}',${i})">
+          <button class="media-del-btn" onclick="delCatImage('${catId}',${i})">×</button>
+        </div>
+      `).join('') : `<div class="empty" style="grid-column:1/-1"><span class="emoji">📷</span>还没有图片<br><span style="font-size:12px;color:var(--text-light)">点击上方按钮添加</span></div>`}
+    </div>
+  `;
+  openModal(body);
+}
+function uploadCatDetailMedia(input, catId) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base = e.target.result;
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1200;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) {
+        const r = Math.min(MAX / w, MAX / h);
+        w = Math.round(w * r);
+        h = Math.round(h * r);
+      }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.8);
+      const cats = Store.getBabyCats();
+      const cat = cats.find(c => c.id === catId);
+      if (cat) {
+        cat.images = cat.images || [];
+        cat.images.push({ id: uid(), type: 'image', data: out });
+        Store.setBabyCats(cats);
+        openCatDetail(catId);
+        toast('📷 已添加图片');
+      }
+    };
+    img.onerror = () => {
+      const cats = Store.getBabyCats();
+      const cat = cats.find(c => c.id === catId);
+      if (cat) {
+        cat.images = cat.images || [];
+        cat.images.push({ id: uid(), type: 'image', data: base });
+        Store.setBabyCats(cats);
+        openCatDetail(catId);
+      }
+    };
+    img.src = base;
+  };
+  reader.readAsDataURL(file);
+}
+function delCatImage(catId, imgIdx) {
+  const cats = Store.getBabyCats();
+  const cat = cats.find(c => c.id === catId);
+  if (!cat) return;
+  cat.images.splice(imgIdx, 1);
+  Store.setBabyCats(cats);
+  openCatDetail(catId);
+}
+function viewCatImage(catId, imgIdx) {
+  const cat = Store.getBabyCats().find(c => c.id === catId);
+  const m = cat?.images?.[imgIdx];
+  if (!m) return;
+  openModal(`<div class="media-view">
+    <button class="modal-close big-close" onclick="closeModal();openCatDetail('${catId}')">×</button>
+    <img src="${m.data}" alt="">
+  </div>`);
+}
+
 function saveWeight() {
   const date = $('#wDate').value || D.today();
   const weight = $('#wWeight').value;
   if (!weight) return;
   const note = $('#wNote') ? $('#wNote').value.trim() : '';
   const timeOfDay = $('#wTime') ? $('#wTime').value : '';
+  const bodyFat = $('#wBodyFat') ? $('#wBodyFat').value : '';
+  const waist = $('#wWaist') ? $('#wWaist').value : '';
+  const arm = $('#wArm') ? $('#wArm').value : '';
+  const thigh = $('#wThigh') ? $('#wThigh').value : '';
   const w = Store.getWeights();
-  w.push({ id: uid(), date, weight, note, timeOfDay });
+  w.push({ id: uid(), date, weight, note, timeOfDay, bodyFat, waist, arm, thigh });
   Store.setWeights(w);
   closeModal(); render();
 }
@@ -3767,6 +4824,87 @@ function renderWeightChart(all) {
       ${xLabels}
     </svg>
   </div>`;
+}
+// 体脂/围度趋势图（多条折线）
+function renderBodyChart(all) {
+  const sorted = all.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+  // 按日期聚合（同一天早晚都有的话取平均）
+  const byDay = {};
+  sorted.forEach(w => {
+    if (!byDay[w.date]) byDay[w.date] = { date: w.date, items: [] };
+    byDay[w.date].items.push(w);
+  });
+  const days = Object.values(byDay);
+  const avg = (items, key) => {
+    const vals = items.map(i => Number(i[key])).filter(v => !isNaN(v) && v > 0);
+    if (!vals.length) return null;
+    return vals.reduce((s, v) => s + v, 0) / vals.length;
+  };
+  const dataList = days.map(d => ({
+    date: d.date,
+    bodyFat: avg(d.items, 'bodyFat'),
+    waist: avg(d.items, 'waist'),
+    arm: avg(d.items, 'arm'),
+    thigh: avg(d.items, 'thigh')
+  })).filter(d => d.bodyFat != null || d.waist != null || d.arm != null || d.thigh != null);
+  if (dataList.length < 2) return '';
+  const metrics = [
+    { key: 'bodyFat', label: '体脂率', color: '#ff6b9d', unit: '%' },
+    { key: 'waist', label: '腰围', color: '#4dabf7', unit: 'cm' },
+    { key: 'arm', label: '臂围', color: '#38d9a9', unit: 'cm' },
+    { key: 'thigh', label: '腿围', color: '#b980ff', unit: 'cm' }
+  ];
+  const haveMetrics = metrics.filter(m => dataList.some(d => d[m.key] != null));
+  if (haveMetrics.length === 0) return '';
+  // 每个指标一张图
+  let html = '';
+  haveMetrics.forEach(m => {
+    const values = dataList.map(d => d[m.key]).filter(v => v != null);
+    if (values.length < 2) return;
+    const W = 320, H = 110, padL = 34, padR = 8, padT = 14, padB = 22;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const minV = Math.min(...values), maxV = Math.max(...values);
+    const range = maxV - minV || 1;
+    const yMin = minV - range * 0.15, yMax = maxV + range * 0.15;
+    const yPad = (yMax - yMin) || 1;
+    const n = dataList.length;
+    const xAt = i => n === 1 ? padL + plotW / 2 : padL + (i / (n - 1)) * plotW;
+    const yAt = v => padT + (1 - (v - yMin) / yPad) * plotH;
+    const pts = [];
+    dataList.forEach((d, i) => {
+      if (d[m.key] != null) pts.push(`${xAt(i).toFixed(1)},${yAt(d[m.key]).toFixed(1)}`);
+    });
+    const path = pts.length ? pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p}`).join(' ') : '';
+    let grid = '';
+    for (let g = 0; g <= 2; g++) {
+      const yv = yMin + (yPad * g / 2);
+      const y = yAt(yv);
+      grid += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>`;
+      grid += `<text x="${padL - 4}" y="${y + 3}" font-size="9" fill="var(--text-light)" text-anchor="end">${yv.toFixed(1)}</text>`;
+    }
+    let dots = '';
+    dataList.forEach((d, i) => {
+      if (d[m.key] != null) {
+        dots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(d[m.key]).toFixed(1)}" r="2.5" fill="${m.color}"/>`;
+      }
+    });
+    let xLabels = '';
+    const labelIdx = n <= 3 ? [0] : [0, Math.floor((n - 1) / 2), n - 1];
+    labelIdx.forEach(i => {
+      const dd = dataList[i].date.slice(5).replace('-', '/');
+      xLabels += `<text x="${xAt(i).toFixed(1)}" y="${H - 6}" font-size="9" fill="var(--text-light)" text-anchor="middle">${dd}</text>`;
+    });
+    html += `<div class="weight-chart">
+      <div class="chart-title"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${m.color};margin-right:4px"></span>${m.label}趋势（${m.unit}，近${dataList.length}天）</div>
+      <svg viewBox="0 0 ${W} ${H}" class="chart-svg">
+        ${grid}
+        ${path ? `<path d="${path}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : ''}
+        ${dots}
+        ${xLabels}
+      </svg>
+    </div>`;
+  });
+  return html;
 }
 
 // ---------- 宝宝睡眠操作 ----------
@@ -3874,6 +5012,7 @@ function renderMore() {
   const sub = subTab.more || 'bag';
   let tabs = `<div class="sub-tabs">
     <button class="sub-tab ${sub === 'bag' ? 'active' : ''}" onclick="setSubTab('more','bag')">🎒 出门清单</button>
+    <button class="sub-tab ${sub === 'trip' ? 'active' : ''}" onclick="setSubTab('more','trip')">📅 行程日程</button>
     <button class="sub-tab ${sub === 'share' ? 'active' : ''}" onclick="setSubTab('more','share')">💄 好物分享</button>
     <button class="sub-tab ${sub === 'cloth' ? 'active' : ''}" onclick="setSubTab('more','cloth')">👕 衣物</button>
     <button class="sub-tab ${sub === 'consumable' ? 'active' : ''}" onclick="setSubTab('more','consumable')">🧴 消耗品</button>
@@ -3885,6 +5024,7 @@ function renderMore() {
   </div>`;
   let body = '';
   if (sub === 'bag') body = renderBags();
+  else if (sub === 'trip') body = renderTrips();
   else if (sub === 'share') body = renderShares();
   else if (sub === 'cloth') body = renderClothes();
   else if (sub === 'consumable') body = renderConsumables();
@@ -3893,15 +5033,108 @@ function renderMore() {
   else if (sub === 'sudden') body = renderTips('sudden');
   else if (sub === 'life') body = renderTips('life');
   else if (sub === 'data') body = renderData();
-  // 待购物/tips/拉屎/数据 有自己的按钮，不显示默认+号
+  // 行程/待购物/tips/拉屎/数据 有自己的按钮，不显示默认+号
   if (sub === 'poop' || sub === 'data' || sub === 'sudden' || sub === 'life' || sub === 'shop') return tabs + body;
   return tabs + body + `<button class="fab" onclick="addMore('${sub}')">+</button>`;
 }
 function addMore(sub) {
   if (sub === 'bag') addBag();
+  else if (sub === 'trip') addTrip();
   else if (sub === 'share') addShare();
   else if (sub === 'cloth') addCloth();
   else if (sub === 'consumable') addConsumable();
+}
+
+// ======== 行程日程 ========
+function renderTrips() {
+  const list = Store.getTrips().slice().sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
+  const today = D.today();
+  const upcoming = list.filter(t => (t.endDate || t.startDate) >= today);
+  const past = list.filter(t => (t.endDate || t.startDate) < today);
+  const colors = ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff', '#e0bbff', '#ffc4e0', '#f4d1a8'];
+  let h = `<div class="card"><div class="card-title"><span class="title-left">📅 行程日程</span>
+    <button class="btn btn-ghost btn-sm" onclick="addTrip()">+ 新行程</button></div>`;
+  const renderTripItem = (t) => {
+    const cIndex = Math.abs((t.id || '').charCodeAt(0) || 0) % colors.length;
+    const color = t.color || colors[cIndex];
+    const endDate = t.endDate || t.startDate;
+    const dateStr = t.startDate === endDate ? D.fmt(t.startDate) : `${D.fmt(t.startDate)} ~ ${D.fmt(endDate)}`;
+    let timeStr = '';
+    if (t.startTime || t.endTime) timeStr = ` · ${t.startTime || '--'}${t.endTime ? ' ~ ' + t.endTime : ''}`;
+    const isToday = (t.startDate <= today && endDate >= today);
+    return `<div class="trip-item" style="border-left:4px solid ${color}">
+      <div class="item-main">
+        <div class="item-title">${esc(t.title)}${isToday ? ' <span class="tag tag-now">进行中</span>' : ''}</div>
+        <div class="item-sub">📆 ${dateStr}${timeStr}</div>
+        ${t.note ? `<div class="item-sub">📝 ${esc(t.note)}</div>` : ''}
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="editTrip('${t.id}')">编辑</button>
+      <button class="del-btn" onclick="delTrip('${t.id}')">×</button>
+    </div>`;
+  };
+  if (upcoming.length) {
+    h += `<div class="section-title">🔜 即将到来</div>`;
+    upcoming.forEach(t => { h += renderTripItem(t); });
+  }
+  if (past.length) {
+    h += `<div class="section-title">📷 已完成</div>`;
+    past.forEach(t => { h += renderTripItem(t); });
+  }
+  if (!list.length) h += `<div class="empty"><span class="emoji">📅</span>还没有行程，添加一个吧<div class="empty-sub">记录旅行、产检、约会、聚会等提前知道的日程</div></div>`;
+  h += `</div>`;
+  return h;
+}
+function addTrip() { openTripModal(null); }
+function editTrip(id) { openTripModal(id); }
+function openTripModal(id) {
+  const list = Store.getTrips();
+  const ed = id ? list.find(x => x.id === id) : null;
+  const colors = ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff', '#e0bbff', '#ffc4e0', '#f4d1a8'];
+  const selColor = ed?.color || colors[0];
+  const body = `
+    <div class="modal-head"><h3>${ed ? '✏️ 编辑行程' : '📅 新行程'}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="field"><label>行程名称</label><input class="input" id="tripTitle" placeholder="如：三亚旅行、产检" value="${escapeAttr(ed?.title || '')}"></div>
+    <div class="row">
+      <div class="field"><label>开始日期</label><input class="input" id="tripSDate" type="date" value="${ed?.startDate || D.today()}"></div>
+      <div class="field"><label>开始时间</label><input class="input" id="tripSTime" type="time" value="${escapeAttr(ed?.startTime || '')}"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>结束日期</label><input class="input" id="tripEDate" type="date" value="${ed?.endDate || ed?.startDate || D.today()}"></div>
+      <div class="field"><label>结束时间</label><input class="input" id="tripETime" type="time" value="${escapeAttr(ed?.endTime || '')}"></div>
+    </div>
+    <div class="field"><label>颜色标签</label>
+      <div class="trip-color-picker">${colors.map((c,i) => `<button class="trip-color ${selColor === c ? 'active' : ''}" style="background:${c}" onclick="document.querySelectorAll('.trip-color').forEach(b=>b.classList.remove('active'));this.classList.add('active');this.dataset.color='${c}';document.getElementById('tripColor').value='${c}'">${selColor === c ? '✓' : ''}</button>`).join('')}</div>
+      <input type="hidden" id="tripColor" value="${selColor}">
+    </div>
+    <div class="field"><label>备注</label><textarea class="textarea" id="tripNote" rows="2" placeholder="如：订了XX酒店，带好身份证">${escapeHtml(ed?.note || '')}</textarea></div>
+    <button class="btn btn-block" onclick="saveTrip('${escapeAttr(id || '')}')">保存</button>
+  `;
+  openModal(body);
+  setTimeout(() => $('#tripTitle').focus(), 100);
+}
+function saveTrip(id) {
+  const title = $('#tripTitle').value.trim();
+  if (!title) return;
+  const startDate = $('#tripSDate').value;
+  const endDate = $('#tripEDate').value || startDate;
+  const startTime = $('#tripSTime').value;
+  const endTime = $('#tripETime').value;
+  const note = $('#tripNote').value.trim();
+  const color = $('#tripColor').value;
+  const list = Store.getTrips();
+  if (id) {
+    const idx = list.findIndex(x => x.id === id);
+    if (idx >= 0) Object.assign(list[idx], { title, startDate, endDate, startTime, endTime, note, color });
+  } else {
+    list.push({ id: uid(), title, startDate, endDate, startTime, endTime, note, color });
+  }
+  Store.setTrips(list);
+  closeModal(); toast('✅ 行程已保存'); render();
+}
+function delTrip(id) {
+  if (!confirm('确定删除这个行程？')) return;
+  Store.setTrips(Store.getTrips().filter(t => t.id !== id));
+  toast('🗑 已删除'); render();
 }
 
 // 出门清单
@@ -4360,6 +5593,8 @@ function delPoop(date) {
 // ========= 待购物清单 =========
 function renderShop() {
   const list = Store.getShop();
+  const cats = Store.getShopCats();
+  const collapsed = Store.getShopCollapsed();
   const pending = list.filter(s => !s.done);
   const done = list.filter(s => s.done);
   let h = `<div class="card shop-card">
@@ -4367,8 +5602,18 @@ function renderShop() {
       <span class="title-left">🛒 待购物清单</span>
       <span class="count-badge">待买 ${pending.length} · 已买 ${done.length}</span>
     </div>
-    <div class="tips-input-row">
-      <input class="input tips-input" id="shopInput" placeholder="输入要买的东西，回车添加" onkeydown="if(event.key==='Enter')shopAdd()" />
+    <div class="shop-add-row">
+      <div class="shop-add-main">
+        <input class="input tips-input" id="shopInput" placeholder="输入要买的东西，回车或点添加" onkeydown="if(event.key==='Enter')shopAdd()" />
+        <div class="shop-sub">
+          <input class="input input-sm" id="shopQty" placeholder="数量 (如 2 / 500g)" style="flex:1" />
+          <select class="select select-sm" id="shopCat" style="flex:1.2">
+            <option value="">选分类</option>
+            ${cats.map(c => `<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join('')}
+          </select>
+          <button class="btn btn-sm btn-ghost" onclick="shopAddCat()" title="新增分类">+ 分类</button>
+        </div>
+      </div>
       <button class="btn" onclick="shopAdd()">添加</button>
     </div>
   </div>`;
@@ -4376,21 +5621,40 @@ function renderShop() {
     h += `<div class="empty-state">🛒 还没有待购物品，想到了就加进来吧～</div>`;
     return h;
   }
-  // 分类汇总（按 category）
+  // 分类汇总（按 category），空分类归到"其他"
   const catMap = {};
+  const ensureCat = (c) => {
+    const k = (c || '').trim() || '其他';
+    if (!catMap[k]) catMap[k] = [];
+    return k;
+  };
   pending.forEach(s => {
-    const c = s.category || '其他';
-    if (!catMap[c]) catMap[c] = [];
-    catMap[c].push(s);
+    const k = ensureCat(s.category);
+    catMap[k].push(s);
   });
-  // 渲染未买
+  // 渲染未买（按分类分组 + 折叠）
   if (pending.length) {
     h += '<div class="shop-section"><div class="shop-section-title">📌 待买</div>';
-    // 按类别分组
-    Object.keys(catMap).sort().forEach(cat => {
+    // 优先按预设分类顺序，再加用户自定义分类
+    const allKeys = Object.keys(catMap).sort((a, b) => {
+      const ia = cats.indexOf(a), ib = cats.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b, 'zh');
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+    allKeys.forEach(cat => {
+      const isCollapsed = collapsed.includes(cat);
+      const items = catMap[cat];
+      const doneInCat = list.filter(s => s.done && ((s.category || '').trim() || '其他') === cat).length;
       h += `<div class="shop-group">
-        <div class="shop-group-head"><span>🏷 ${escapeHtml(cat)}</span><span class="shop-group-cnt">${catMap[cat].length}</span></div>`;
-      catMap[cat].forEach(s => {
+        <div class="shop-group-head" onclick="shopToggleCollapse('${escapeAttr(cat)}')">
+          <span class="shop-group-arrow">${isCollapsed ? '▶' : '▼'}</span>
+          <span class="shop-group-label">🏷 ${escapeHtml(cat)}</span>
+          <span class="shop-group-cnt">待买 ${items.length}${doneInCat ? ` · 已买 ${doneInCat}` : ''}</span>
+        </div>
+        <div class="shop-group-body ${isCollapsed ? 'is-collapsed' : ''}">`;
+      items.forEach(s => {
         const idx = list.findIndex(x => x.id === s.id);
         h += `<div class="shop-item">
           <label class="shop-check">
@@ -4405,26 +5669,56 @@ function renderShop() {
           </div>
         </div>`;
       });
-      h += '</div>';
+      h += '</div></div>';
     });
     h += '</div>';
   }
-  // 渲染已买
+  // 渲染已买（按分类分组 + 折叠）
   if (done.length) {
-    h += '<div class="shop-section shop-done"><div class="shop-section-title">✅ 已买</div>';
+    const doneMap = {};
+    const ensureD = (c) => {
+      const k = (c || '').trim() || '其他';
+      if (!doneMap[k]) doneMap[k] = [];
+      return k;
+    };
     done.forEach(s => {
-      const idx = list.findIndex(x => x.id === s.id);
-      h += `<div class="shop-item shop-item-done">
-        <label class="shop-check">
-          <input type="checkbox" checked onchange="shopToggle(${idx})" />
-          <span class="shop-name">${escapeHtml(s.name)}</span>
-          ${s.qty ? `<span class="shop-qty">×${escapeHtml(s.qty)}</span>` : ''}
-          ${s.shop ? `<span class="shop-shop">📍 ${escapeHtml(s.shop)}</span>` : ''}
-        </label>
-        <div class="shop-item-actions">
-          <button class="btn btn-sm btn-danger" onclick="shopDel(${idx})">🗑</button>
+      const k = ensureD(s.category);
+      doneMap[k].push(s);
+    });
+    const doneCollapsed = Store.getShopCollapsedDone ? Store.getShopCollapsedDone() : [];
+    h += '<div class="shop-section shop-done"><div class="shop-section-title">✅ 已买</div>';
+    const dKeys = Object.keys(doneMap).sort((a, b) => {
+      const ia = cats.indexOf(a), ib = cats.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b, 'zh');
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+    dKeys.forEach(cat => {
+      const isCollapsed = doneCollapsed.includes(cat);
+      const items = doneMap[cat];
+      h += `<div class="shop-group shop-group-done">
+        <div class="shop-group-head" onclick="shopToggleCollapseDone('${escapeAttr(cat)}')">
+          <span class="shop-group-arrow">${isCollapsed ? '▶' : '▼'}</span>
+          <span class="shop-group-label">🏷 ${escapeHtml(cat)}</span>
+          <span class="shop-group-cnt">${items.length}</span>
         </div>
-      </div>`;
+        <div class="shop-group-body ${isCollapsed ? 'is-collapsed' : ''}">`;
+      items.forEach(s => {
+        const idx = list.findIndex(x => x.id === s.id);
+        h += `<div class="shop-item shop-item-done">
+          <label class="shop-check">
+            <input type="checkbox" checked onchange="shopToggle(${idx})" />
+            <span class="shop-name">${escapeHtml(s.name)}</span>
+            ${s.qty ? `<span class="shop-qty">×${escapeHtml(s.qty)}</span>` : ''}
+            ${s.shop ? `<span class="shop-shop">📍 ${escapeHtml(s.shop)}</span>` : ''}
+          </label>
+          <div class="shop-item-actions">
+            <button class="btn btn-sm btn-danger" onclick="shopDel(${idx})">🗑</button>
+          </div>
+        </div>`;
+      });
+      h += '</div></div>';
     });
     h += '</div>';
   }
@@ -4432,20 +5726,116 @@ function renderShop() {
 }
 function shopAdd() {
   const el = $('#shopInput');
+  const qtyEl = $('#shopQty');
+  const catEl = $('#shopCat');
   const name = (el?.value || '').trim();
   if (!name) { toast('请输入要买的东西'); return; }
   const list = Store.getShop();
   list.push({
     id: uid(),
     name,
-    qty: '',
-    category: '',
+    qty: (qtyEl?.value || '').trim(),
+    category: (catEl?.value || '').trim() || '其他',
     shop: '',
     done: false,
     createdAt: D.today()
   });
   Store.setShop(list);
+  // 把新分类合并到分类列表
+  if ((catEl?.value || '').trim()) {
+    const cats = Store.getShopCats();
+    const c = catEl.value.trim();
+    if (!cats.includes(c)) {
+      cats.push(c);
+      Store.setShopCats(cats);
+    }
+  }
   toast('🛒 已加入待购物清单');
+  render();
+}
+// 新增分类（管理分类列表）
+function shopAddCat() {
+  openModal(`<div class="modal-card">
+    <h3>🏷 管理分类</h3>
+    <div id="shopCatList"></div>
+    <div class="field"><label>新增分类</label>
+      <div class="shop-add-main" style="flex-direction:row;gap:6px">
+        <input class="input" id="newCatName" placeholder="输入分类名" onkeydown="if(event.key==='Enter')shopSaveNewCat()" />
+        <button class="btn" onclick="shopSaveNewCat()">添加</button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn btn-ghost" onclick="closeModal()">完成</button>
+    </div>
+  </div>`);
+  shopRenderCatMgr();
+}
+function shopRenderCatMgr() {
+  const cats = Store.getShopCats();
+  const box = $('#shopCatList');
+  if (!box) return;
+  let h = '<div class="shop-cat-mgr">';
+  cats.forEach((c, i) => {
+    h += `<div class="shop-cat-row">
+      <span>🏷 ${escapeHtml(c)}</span>
+      <div class="shop-cat-ops">
+        ${i > 0 ? `<button class="btn btn-xs btn-ghost" onclick="shopCatMove(${i},-1)">↑</button>` : ''}
+        ${i < cats.length - 1 ? `<button class="btn btn-xs btn-ghost" onclick="shopCatMove(${i},1)">↓</button>` : ''}
+        <button class="btn btn-xs btn-danger" onclick="shopCatDel(${i})">删除</button>
+      </div>
+    </div>`;
+  });
+  h += '</div>';
+  box.innerHTML = h;
+}
+function shopSaveNewCat() {
+  const el = $('#newCatName');
+  const name = (el?.value || '').trim();
+  if (!name) return;
+  const cats = Store.getShopCats();
+  if (cats.includes(name)) { toast('该分类已存在'); return; }
+  cats.push(name);
+  Store.setShopCats(cats);
+  toast('✅ 已添加');
+  shopRenderCatMgr();
+  if (el) el.value = '';
+}
+function shopCatMove(i, d) {
+  const cats = Store.getShopCats();
+  const j = i + d;
+  if (j < 0 || j >= cats.length) return;
+  [cats[i], cats[j]] = [cats[j], cats[i]];
+  Store.setShopCats(cats);
+  shopRenderCatMgr();
+}
+function shopCatDel(i) {
+  const cats = Store.getShopCats();
+  const name = cats[i];
+  if (!confirm(`删除分类「${name}」？该分类下的物品会归到"其他"`)) return;
+  cats.splice(i, 1);
+  Store.setShopCats(cats);
+  // 清理已购/待购中的该分类名，归为其他
+  const list = Store.getShop();
+  list.forEach(s => { if (s.category === name) s.category = '其他'; });
+  Store.setShop(list);
+  shopRenderCatMgr();
+}
+// 折叠/展开分类（待买）
+function shopToggleCollapse(cat) {
+  const arr = Store.getShopCollapsed();
+  const i = arr.indexOf(cat);
+  if (i >= 0) arr.splice(i, 1); else arr.push(cat);
+  Store.setShopCollapsed(arr);
+  render();
+}
+// 折叠/展开分类（已买）
+function shopToggleCollapseDone(cat) {
+  let arr;
+  try { arr = Store.getShopCollapsedDone(); } catch (e) { arr = []; }
+  if (!Array.isArray(arr)) arr = [];
+  const i = arr.indexOf(cat);
+  if (i >= 0) arr.splice(i, 1); else arr.push(cat);
+  DB.set('shopCollapsedDone', arr);
   render();
 }
 function shopToggle(idx) {
@@ -4461,12 +5851,19 @@ function shopEdit(idx) {
   const list = Store.getShop();
   const s = list[idx];
   if (!s) return;
+  const cats = Store.getShopCats();
+  const curCat = (s.category || '').trim() || '其他';
   openModal(`<div class="modal-card">
     <h3>✏️ 编辑物品</h3>
     <div class="field"><label>名称</label><input class="input" id="shopName" value="${escapeAttr(s.name)}"></div>
     <div class="row">
       <div class="field"><label>数量</label><input class="input" id="shopQty" value="${escapeAttr(s.qty || '')}" placeholder="如 2 / 500g"></div>
-      <div class="field"><label>类别</label><input class="input" id="shopCat" value="${escapeAttr(s.category || '')}" placeholder="如 生鲜/日用"></div>
+      <div class="field"><label>类别</label>
+        <select class="select" id="shopCat">
+          <option value="">选分类</option>
+          ${cats.map(c => `<option value="${escapeAttr(c)}" ${curCat === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('')}
+        </select>
+      </div>
     </div>
     <div class="field"><label>购买地点</label><input class="input" id="shopShop" value="${escapeAttr(s.shop || '')}" placeholder="如 山姆/京东/楼下超市"></div>
     <div class="row">
@@ -4480,8 +5877,14 @@ function shopSave(idx) {
   if (!list[idx]) return;
   list[idx].name = ($('#shopName').value || '').trim();
   list[idx].qty = ($('#shopQty').value || '').trim();
-  list[idx].category = ($('#shopCat').value || '').trim();
+  const catVal = ($('#shopCat').value || '').trim();
+  list[idx].category = catVal || '其他';
   list[idx].shop = ($('#shopShop').value || '').trim();
+  // 新分类合并
+  if (catVal) {
+    const cats = Store.getShopCats();
+    if (!cats.includes(catVal)) { cats.push(catVal); Store.setShopCats(cats); }
+  }
   Store.setShop(list);
   toast('✅ 已保存');
   closeModal();
@@ -4588,7 +5991,8 @@ const DATA_KEYS = [
   'days', 'weekly', 'monthly', 'medList', 'accounts', 'trades', 'baby',
   'weights', 'bags', 'shares', 'clothes', 'consumables', 'routine',
   'sleepTarget', 'sleepList', 'babySleep', 'ledgers', 'poops',
-  'tipsSudden', 'tipsLife', 'shop', 'notifyEnabled', 'notifyTimes'
+  'tipsSudden', 'tipsLife', 'shop', 'notifyEnabled', 'notifyTimes',
+  'babyCats', 'trips'
 ];
 function renderData() {
   // 统计各模块数据量
@@ -4623,8 +6027,65 @@ function renderData() {
       <button class="btn btn-danger btn-block" onclick="clearAllData()">🗑 清空全部数据</button>
     </div>
     <div class="data-tip">💡 导出的 JSON 文件包含所有打卡、账目、记录。换手机/浏览器时用「导入」恢复。建议每周导出一次做备份。</div>
+  </div>
+  <div class="card"><div class="card-title"><span class="title-left">🔄 应用更新</span></div>
+    <div class="data-actions" style="gap:6px">
+      <div class="app-ver-row">
+        <div class="app-ver-label">当前版本</div>
+        <div class="app-ver-val" id="appVerVal">v22 · ${new Date().toLocaleDateString('zh-CN')}</div>
+      </div>
+      <button class="btn btn-block" onclick="checkAppUpdate()">🔍 检查更新（立即联网）</button>
+      <button class="btn btn-ghost btn-block" onclick="clearAppCacheAndReload()">♻️ 清除缓存强制刷新</button>
+    </div>
+    <div class="data-tip">💡 桌面应用（PWA）会自动检查更新，不生效时点上面两个按钮立刻处理。</div>
   </div>`;
   return h;
+}
+// 检查 PWA 更新
+function checkAppUpdate() {
+  if (!('serviceWorker' in navigator)) { toast('浏览器不支持 PWA'); return; }
+  navigator.serviceWorker.getRegistration().then(reg => {
+    if (!reg) { toast('⚠️ 当前未安装为桌面应用，可忽略'); return; }
+    toast('🔍 正在检查更新...');
+    reg.update().then(() => {
+      const waiting = reg.waiting, installing = reg.installing;
+      if (waiting) {
+        toast('✨ 已发现新版本，点击确认刷新');
+        waiting.postMessage({ type: 'SKIP_WAITING' });
+        setTimeout(() => window.location.reload(), 500);
+      } else if (installing) {
+        toast('📥 新版本下载中，请稍候...');
+        installing.addEventListener('statechange', () => {
+          if (installing.state === 'installed') {
+            toast('✅ 新版本已就绪，正在刷新');
+            setTimeout(() => window.location.reload(), 500);
+          }
+        });
+      } else {
+        toast('✅ 当前已是最新版本');
+      }
+    }).catch(e => toast('检查失败: ' + e.message));
+  });
+}
+// 清除缓存并强制刷新
+function clearAppCacheAndReload() {
+  if (!confirm('清除应用缓存并重新加载最新版本？（数据不会丢）')) return;
+  const tasks = [];
+  // 1) 清除 caches 里的旧缓存
+  if ('caches' in window) {
+    tasks.push(caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(()=>{}));
+  }
+  // 2) 注销现有 SW
+  if ('serviceWorker' in navigator) {
+    tasks.push(
+      navigator.serviceWorker.getRegistrations().then(regs =>
+        Promise.all(regs.map(r => r.unregister()))
+      ).catch(()=>{})
+    );
+  }
+  Promise.all(tasks).then(() => {
+    window.location.reload(true);
+  });
 }
 function exportData() {
   const data = {};
@@ -4690,7 +6151,7 @@ render();
     if ('serviceWorker' in navigator) {
       window.addEventListener("load", () => {
         try {
-          const swCode = "// \u751c\u9171\u65e5\u5e38 Service Worker - \u79bb\u7ebf\u7f13\u5b58\nconst CACHE = 'tianjiang-v14';\nconst ASSETS = [\n  './',\n  './index.html',\n  './styles.css',\n  './app.js',\n  './manifest.json',\n  './icon-192.png',\n  './icon-512.png',\n  './apple-touch-icon.png'\n];\n\nself.addEventListener('install', e => {\n  e.waitUntil(\n    caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', e => {\n  e.waitUntil(\n    caches.keys().then(keys =>\n      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))\n    )\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', e => {\n  if (e.request.method !== 'GET') return;\n  e.respondWith(\n    caches.match(e.request).then(hit => {\n      return hit || fetch(e.request).then(res => {\n        // \u540c\u6e90\u6210\u529f\u54cd\u5e94\u624d\u7f13\u5b58\n        if (res && res.status === 200 && new URL(e.request.url).origin === location.origin) {\n          const copy = res.clone();\n          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});\n        }\n        return res;\n      }).catch(() => hit);\n    })\n  );\n});\n";
+          const swCode = "// \u751c\u9171\u65e5\u5e38 Service Worker - \u79bb\u7ebf\u7f13\u5b58\nconst CACHE = 'tianjiang-v23';\nconst ASSETS = [\n  './',\n  './index.html',\n  './styles.css',\n  './app.js',\n  './manifest.json',\n  './icon-192.png',\n  './icon-512.png',\n  './apple-touch-icon.png'\n];\n\nself.addEventListener('install', e => {\n  e.waitUntil(\n    caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', e => {\n  e.waitUntil(\n    caches.keys().then(keys =>\n      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))\n    )\n  );\n  self.clients.claim();\n});\n\n// \u63a5\u6536\u5230\u300c\u7acb\u5373\u66f4\u65b0\u300d\u6d88\u606f\u65f6\u8ba9\u65b0 SW \u7acb\u523b\u63a5\u7ba1\uff0c\u4e0d\u7528\u7b49\u5173\u95ed\u518d\u6253\u5f00\nself.addEventListener('message', e => {\n  if (e.data && (e.data.type === 'SKIP_WAITING' || e.data === 'SKIP_WAITING')) {\n    self.skipWaiting();\n  }\n});\n\nself.addEventListener('fetch', e => {\n  if (e.request.method !== 'GET') return;\n  const url = new URL(e.request.url);\n  // HTML \u6587\u6863\u8d70\u7f51\u7edc\u4f18\u5148\uff0c\u786e\u4fdd\u59cb\u7ec8\u62ff\u5230\u6700\u65b0\u7248\u672c\n  const isHTML = e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname.endsWith('/');\n  if (isHTML) {\n    e.respondWith(\n      fetch(e.request).then(res => {\n        if (res && res.status === 200) {\n          const copy = res.clone();\n          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});\n        }\n        return res;\n      }).catch(() => caches.match(e.request).then(h => h || caches.match('./index.html')))\n    );\n    return;\n  }\n  // \u5176\u4ed6\u8d44\u6e90\u7f13\u5b58\u4f18\u5148\uff0c\u540e\u53f0\u9759\u9ed8\u66f4\u65b0\n  e.respondWith(\n    caches.match(e.request).then(hit => {\n      const fetchPromise = fetch(e.request).then(res => {\n        if (res && res.status === 200 && url.origin === location.origin) {\n          const copy = res.clone();\n          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});\n        }\n        return res;\n      }).catch(() => hit);\n      return hit || fetchPromise;\n    })\n  );\n});\n";
           const blob = new Blob([swCode], { type: "text/javascript" });
           const url = URL.createObjectURL(blob);
           navigator.serviceWorker.register(url).catch(() => {});
