@@ -148,7 +148,7 @@ const Store = {
   // 记账
   getAccounts() { return DB.get('accounts', []); },
   setAccounts(v) { DB.set('accounts', v); },
-  // 买卖差价
+  // 出闲置
   getTrades() { return DB.get('trades', []); },
   setTrades(v) { DB.set('trades', v); },
   // 宝宝成长
@@ -237,6 +237,15 @@ const Store = {
   // 生活小tips
   getTipsLife() { return DB.get('tipsLife', []); },
   setTipsLife(v) { DB.set('tipsLife', v); },
+  // 家居好物 / 变美小tips / 宝宝好物 / OOTD
+  getHomeGoods() { return DB.get('homeGoods', []); },
+  setHomeGoods(v) { DB.set('homeGoods', v); },
+  getBeautyTips() { return DB.get('beautyTips', []); },
+  setBeautyTips(v) { DB.set('beautyTips', v); },
+  getBabyItems() { return DB.get('babyItems', []); },
+  setBabyItems(v) { DB.set('babyItems', v); },
+  getOOTDs() { return DB.get('ootds', []); },
+  setOOTDs(v) { DB.set('ootds', v); },
   // 待购物清单
   getShop() { return DB.get('shop', []); },
   setShop(v) { DB.set('shop', v); },
@@ -485,7 +494,7 @@ const SUB_NAVS = {
     { key: 'expense', icon: '💸', label: '支出' },
     { key: 'income', icon: '💰', label: '收入' },
     { key: 'reimburse', icon: '🧾', label: '待报销' },
-    { key: 'trade', icon: '📦', label: '买卖' },
+    { key: 'trade', icon: '📦', label: '出闲置' },
     { key: 'ledger', icon: '📚', label: '账本' }
   ],
   growth: [
@@ -496,6 +505,10 @@ const SUB_NAVS = {
   more: [
     { key: 'bag', icon: '🎒', label: '出门清单' },
     { key: 'share', icon: '💄', label: '好物分享' },
+    { key: 'homegood', icon: '🏡', label: '家居好物' },
+    { key: 'beauty', icon: '💋', label: '变美小tips' },
+    { key: 'babyitem', icon: '🍼', label: '宝宝好物' },
+    { key: 'ootd', icon: '👗', label: 'OOTD分享' },
     { key: 'cloth', icon: '👕', label: '衣物' },
     { key: 'consumable', icon: '🧴', label: '消耗品' },
     { key: 'shop', icon: '🛒', label: '待购物' },
@@ -600,6 +613,16 @@ function renderHome() {
   const crLabel = chartRange === 7 ? '近7天' : chartRange === 14 ? '近14天' : '近30天';
 
   let h = navHTML;
+  // 🌷 每日防焦虑开心句子（首页最顶部）
+  const hq = getDailyHappyQuote();
+  h += `<div class="happy-quote-card" onclick="switchHappyQuote('daily')" title="点一下换一句">
+    <span class="hq-emoji">💗</span>
+    <span class="hq-text">${escapeHtml(hq)}</span>
+    <span class="hq-actions">
+      <button class="hq-btn" onclick="event.stopPropagation();switchHappyQuote('random')" title="每次刷新随机换一句">🎲</button>
+      <button class="hq-btn" onclick="event.stopPropagation();switchHappyQuote('daily')" title="每天固定一句">📅</button>
+    </span>
+  </div>`;
   h += reminderBanner();
 
   // 📝 今日代办（放最上面）
@@ -1548,7 +1571,7 @@ function renderCalendar() {
     const preview = notes[0] ? esc(notes[0].text) : (todos[0] ? esc(todos[0].text) : '');
     h += `<div class="cal-cell ${isToday ? 'today' : ''} ${hasRecord ? 'has-rec' : ''}" onclick="openDay('${ds}')">
       <div class="cal-date">${d}</div>
-      ${preview ? `<div class="cal-preview">${preview.length > 20 ? preview.slice(0, 20) + '…' : preview}</div>` : ''}
+      ${preview ? `<div class="cal-preview">${preview.length > 60 ? preview.slice(0, 60) + '…' : preview}</div>` : ''}
       ${notes.length > 1 ? `<div class="cal-count">+${notes.length - 1}</div>` : ''}
       ${todos.length && !notes.length ? `<div class="cal-count todo">代办${todos.length}</div>` : ''}
     </div>`;
@@ -1597,9 +1620,13 @@ function openDay(dateStr) {
   const calRecords = day.calories?.records || [];
   let h = `<div class="modal-head"><h3>${D.fmt(dateStr)}</h3><button class="modal-close" onclick="closeModal();render()">×</button></div>`;
   // 日记输入
+  const nowHH = String(new Date().getHours()).padStart(2, '0');
+  const nowMM = String(new Date().getMinutes()).padStart(2, '0');
   h += `<div class="field"><label>写下今天干了什么</label>
     <div class="row"><input class="input" id="noteIn" placeholder="如 带娃逛公园 / 看完了一本书" onkeydown="if(event.key==='Enter')addDayNote('${dateStr}')">
-    <button class="btn btn-sm" onclick="addDayNote('${dateStr}')">+</button></div></div>`;
+    <button class="btn btn-sm" onclick="addDayNote('${dateStr}')">+</button></div></div>
+    <div class="field" style="margin-top:4px"><label>时间(可选，默认当前)</label>
+      <input class="input" id="noteTime" type="time" value="${nowHH}:${nowMM}"></div>`;
   h += `<div id="dayNoteList">`;
   if (!notes.length) h += `<div class="empty" style="padding:14px 0"><span class="emoji">📝</span>这一天还没有日记</div>`;
   else notes.slice().reverse().forEach(n => {
@@ -1672,9 +1699,11 @@ function openDay(dateStr) {
 function addDayNote(dateStr) {
   const text = $('#noteIn').value.trim();
   if (!text) return;
+  const t = $('#noteTime') ? $('#noteTime').value : '';
+  const time = t || D.now().slice(11);
   const day = Store.getDay(dateStr);
   day.notes = day.notes || [];
-  day.notes.push({ id: uid(), text, time: D.now().slice(11) });
+  day.notes.push({ id: uid(), text, time });
   Store.setDay(dateStr, day);
   openDay(dateStr);
 }
@@ -2007,7 +2036,7 @@ function renderAccount() {
     <button class="sub-tab ${sub === 'expense' ? 'active' : ''}" onclick="setSubTab('account','expense')">💸 支出</button>
     <button class="sub-tab ${sub === 'income' ? 'active' : ''}" onclick="setSubTab('account','income')">💰 收入</button>
     <button class="sub-tab ${sub === 'reimburse' ? 'active' : ''}" onclick="setSubTab('account','reimburse')">🧾 待报销</button>
-    <button class="sub-tab ${sub === 'trade' ? 'active' : ''}" onclick="setSubTab('account','trade')">📦 买卖</button>
+    <button class="sub-tab ${sub === 'trade' ? 'active' : ''}" onclick="setSubTab('account','trade')">📦 出闲置</button>
     <button class="sub-tab ${sub === 'ledger' ? 'active' : ''}" onclick="setSubTab('account','ledger')">📚 账本</button>
   </div>`;
   let body = '';
@@ -2023,7 +2052,7 @@ function renderAccount() {
       const led = ledgerName(a.ledger);
       body += `<div class="list-item">
         <div class="item-main"><div class="item-title">${esc(a.category)} · ${esc(a.note || '')}</div>
-          <div class="item-sub">${D.fmt(a.date)} ${led ? '· ' + esc(led) : ''}</div></div>
+          <div class="item-sub">${D.fmt(a.date)}${a.time ? ' ' + esc(a.time) : ''} ${led ? '· ' + esc(led) : ''}</div></div>
         <div class="item-right profit-neg">-¥${a.amount}</div>
         ${a.img ? `<button class="btn btn-ghost btn-sm" onclick="viewImg('${a.id}','account')">🖼</button>` : ''}
         <button class="del-btn" onclick="delAccount('${a.id}')">×</button></div>`;
@@ -2039,7 +2068,7 @@ function renderAccount() {
       const led = ledgerName(a.ledger);
       body += `<div class="list-item">
         <div class="item-main"><div class="item-title">${esc(a.category)} · ${esc(a.note || '')}</div>
-          <div class="item-sub">${D.fmt(a.date)} ${led ? '· ' + esc(led) : ''}</div></div>
+          <div class="item-sub">${D.fmt(a.date)}${a.time ? ' ' + esc(a.time) : ''} ${led ? '· ' + esc(led) : ''}</div></div>
         <div class="item-right profit-pos">+¥${a.amount}</div>
         <button class="del-btn" onclick="delAccount('${a.id}')">×</button></div>`;
     });
@@ -2066,7 +2095,7 @@ function renderAccount() {
     const lossItems = sold.filter(t => Number(t.sellPrice) - Number(t.buyPrice) < 0);
     const lossCnt = lossItems.length;
     const lossAmt = lossItems.reduce((s, t) => s + Math.abs(Number(t.sellPrice) - Number(t.buyPrice)), 0);
-    body = `<div class="card"><div class="card-title"><span class="title-left">📦 买卖差价</span></div>
+    body = `<div class="card"><div class="card-title"><span class="title-left">📦 出闲置</span></div>
       <div class="stat-row"><div class="stat-box"><div class="num ${profit >= 0 ? 'profit-pos' : 'profit-neg'}">¥${profit.toFixed(0)}</div><div class="label">总利润</div></div>
         <div class="stat-box"><div class="num profit-neg">¥${lossAmt.toFixed(0)}</div><div class="label">总亏损</div></div>
         <div class="stat-box"><div class="num">${lossCnt}</div><div class="label">亏本次数</div></div>
@@ -2077,8 +2106,9 @@ function renderAccount() {
       const isLoss = profit != null && profit < 0;
       body += `<div class="list-item">
         <div class="item-main"><div class="item-title">${esc(t.name)}</div>
-          <div class="item-sub">买入¥${t.buyPrice}${t.sellPrice != null ? ' → 卖出¥' + t.sellPrice : ' · 未售出'}${isLoss ? ' · 亏本¥' + Math.abs(profit) : ''}</div></div>
+          <div class="item-sub">${t.date ? D.fmt(t.date) + ' · ' : ''}买入¥${t.buyPrice}${t.sellPrice != null ? ' → 卖出¥' + t.sellPrice : ' · 未售出'}${isLoss ? ' · 亏本¥' + Math.abs(profit) : ''}</div></div>
         <div class="item-right ${profit == null ? '' : (profit >= 0 ? 'profit-pos' : 'profit-neg')}">${profit == null ? '-' : (profit >= 0 ? '+' : '') + '¥' + profit}</div>
+        ${t.img ? `<button class="btn btn-ghost btn-sm" onclick="viewImg('${t.id}','trade')">🖼</button>` : ''}
         ${t.sellPrice == null ? `<button class="btn btn-ghost btn-sm" onclick="sellTrade('${t.id}')">售出</button>` : ''}
         <button class="del-btn" onclick="delTrade('${t.id}')">×</button></div>`;
     });
@@ -2242,9 +2272,15 @@ function ledgerName(id) {
 function addAccount(type) {
   if (type === 'trade') {
     openModal(`
-      <div class="modal-head"><h3>添加买卖记录</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+      <div class="modal-head"><h3>添加出闲置记录</h3><button class="modal-close" onclick="closeModal()">×</button></div>
       <div class="field"><label>物品名称</label><input class="input" id="tName"></div>
-      <div class="field"><label>买入价格(¥)</label><input class="input" id="tBuy" type="number"></div>
+      <div class="row">
+        <div class="field"><label>买入价格(¥)</label><input class="input" id="tBuy" type="number"></div>
+        <div class="field"><label>买入日期</label><input class="input" id="tDate" type="date" value="${D.today()}"></div>
+      </div>
+      <div class="field"><label>商品图片(可选)</label>
+        <input type="file" id="tImg" accept="image/*" onchange="previewImg(this,'tImgPrev')"></div>
+      <div id="tImgPrev" class="img-preview"></div>
       <button class="btn btn-block" onclick="saveTrade()">保存</button>
     `);
     setTimeout(() => $('#tName').focus(), 100);
@@ -2259,6 +2295,10 @@ function addAccount(type) {
       <div class="modal-head"><h3>${isIncome ? '添加收入' : '添加支出'}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
       <div class="field"><label>分类</label><select class="select" id="aCat">${cats.map(c => `<option>${c}</option>`).join('')}</select></div>
       <div class="field"><label>金额(¥)</label><input class="input" id="aAmt" type="number"></div>
+      <div class="row">
+        <div class="field"><label>日期</label><input class="input" id="aDate" type="date" value="${D.today()}"></div>
+        <div class="field"><label>时间(可选)</label><input class="input" id="aTime" type="time"></div>
+      </div>
       <div class="field"><label>备注</label><input class="input" id="aNote"></div>
       <div class="field"><label>所属账本</label><select class="select" id="aLed">
         <option value="total">🏦 总账本</option>
@@ -2287,10 +2327,12 @@ function saveAccount(isIncome) {
   if (!amt) return;
   const note = $('#aNote').value.trim();
   const ledger = $('#aLed') ? $('#aLed').value : 'total';
+  const date = $('#aDate') ? $('#aDate').value : D.today();
+  const time = $('#aTime') ? $('#aTime').value : '';
   const imgInput = $('#aImg');
   const finish = (imgData) => {
     const a = Store.getAccounts();
-    const rec = { id: uid(), date: D.today(), category: cat, amount: amt, note, ledger, img: imgData || '' };
+    const rec = { id: uid(), date: date || D.today(), time, category: cat, amount: amt, note, ledger, img: imgData || '' };
     if (isIncome) rec.type = 'income';
     else { rec.reimburse = $('#aReim') ? $('#aReim').checked : false; rec.claimed = false; }
     a.push(rec);
@@ -2304,7 +2346,7 @@ function saveAccount(isIncome) {
   } else finish('');
 }
 function viewImg(id, type) {
-  const list = type === 'account' ? Store.getAccounts() : type === 'cloth' ? Store.getClothes() : [];
+  const list = type === 'account' ? Store.getAccounts() : type === 'trade' ? Store.getTrades() : type === 'cloth' ? Store.getClothes() : [];
   const item = list.find(x => x.id === id);
   if (item && item.img) {
     openModal(`<div class="modal-head"><h3>图片预览</h3><button class="modal-close" onclick="closeModal()">×</button></div>
@@ -2324,10 +2366,19 @@ function saveTrade() {
   const name = $('#tName').value.trim();
   const buy = Number($('#tBuy').value);
   if (!name || !buy) return;
-  const t = Store.getTrades();
-  t.push({ id: uid(), name, buyPrice: buy, sellPrice: null });
-  Store.setTrades(t);
-  closeModal(); render();
+  const date = $('#tDate') ? $('#tDate').value : D.today();
+  const imgInput = $('#tImg');
+  const finish = (imgData) => {
+    const t = Store.getTrades();
+    t.push({ id: uid(), name, buyPrice: buy, sellPrice: null, date: date || D.today(), img: imgData || '' });
+    Store.setTrades(t);
+    closeModal(); render();
+  };
+  if (imgInput && imgInput.files && imgInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => finish(e.target.result);
+    reader.readAsDataURL(imgInput.files[0]);
+  } else finish('');
 }
 function sellTrade(id) {
   openModal(`
@@ -2732,12 +2783,12 @@ function openBabyGrowthModal(editId) {
       <label>照片 / 视频</label>
       <div class="media-picker">
         <label class="media-pick-btn">📷 加图片
-          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="uploadBabyMedia(this,'image')">
+          <input type="file" accept="image/*" multiple style="display:none" onchange="uploadBabyMedia(this,'image')">
         </label>
         <label class="media-pick-btn">🎥 加视频
-          <input type="file" accept="video/*" capture="environment" style="display:none" onchange="uploadBabyMedia(this,'video')">
+          <input type="file" accept="video/*" style="display:none" onchange="uploadBabyMedia(this,'video')">
         </label>
-        <span class="media-tip">建议视频 ≤30秒,图片会自动压缩</span>
+        <span class="media-tip">可从相册多选或拍照，视频建议 ≤30秒，图片会自动压缩</span>
       </div>
       <div class="media-draft-list" id="babyDraftList"></div>
     </div>
@@ -2762,45 +2813,52 @@ function renderBabyDraftList() {
   `).join('');
 }
 // 上传 baby 附件：图片转 base64（并压缩到≤1200px），视频也转 base64 但不压缩（注意大小限制）
+// 支持多选：循环处理 input.files
 function uploadBabyMedia(input, type) {
-  const file = input.files && input.files[0];
+  const files = input.files ? Array.from(input.files) : [];
   input.value = '';
-  if (!file || !__babyDraft) return;
-  const kb = file.size / 1024;
-  if (type === 'video' && kb > 10240) {
-    if (!confirm(`视频约 ${(kb / 1024).toFixed(1)}MB，比较大。\nlocalStorage 总容量约 5MB，可能存不下。\n建议转成短视频/压缩后再传。确定继续上传吗？`)) return;
-  }
-  const reader = new FileReader();
-  reader.onload = e => {
-    const base = e.target.result;
-    if (type === 'image') {
-      // 图片压缩：限制最长边 1200，JPEG 质量 0.8
-      const img = new Image();
-      img.onload = () => {
-        const MAX = 1200;
-        let w = img.naturalWidth, h = img.naturalHeight;
-        if (w > MAX || h > MAX) {
-          const r = Math.min(MAX / w, MAX / h);
-          w = Math.round(w * r);
-          h = Math.round(h * r);
-        }
-        const cv = document.createElement('canvas');
-        cv.width = w; cv.height = h;
-        cv.getContext('2d').drawImage(img, 0, 0, w, h);
-        const out = cv.toDataURL('image/jpeg', 0.8);
-        __babyDraft.media.push({ type: 'image', data: out });
-        renderBabyDraftList();
-        toast('📷 已添加图片');
-      };
-      img.onerror = () => { __babyDraft.media.push({ type: 'image', data: base }); renderBabyDraftList(); toast('📷 已添加图片'); };
-      img.src = base;
-    } else {
-      __babyDraft.media.push({ type: 'video', data: base });
-      renderBabyDraftList();
-      toast('🎥 已添加视频');
+  if (!files.length || !__babyDraft) return;
+  let added = 0;
+  const total = files.length;
+  files.forEach(file => {
+    const kb = file.size / 1024;
+    if (type === 'video' && kb > 10240) {
+      if (!confirm(`视频约 ${(kb / 1024).toFixed(1)}MB，比较大。\nlocalStorage 总容量约 5MB，可能存不下。\n建议转成短视频/压缩后再传。确定继续上传吗？`)) return;
     }
-  };
-  reader.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const base = e.target.result;
+      if (type === 'image') {
+        // 图片压缩：限制最长边 1200，JPEG 质量 0.8
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 1200;
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > MAX || h > MAX) {
+            const r = Math.min(MAX / w, MAX / h);
+            w = Math.round(w * r);
+            h = Math.round(h * r);
+          }
+          const cv = document.createElement('canvas');
+          cv.width = w; cv.height = h;
+          cv.getContext('2d').drawImage(img, 0, 0, w, h);
+          const out = cv.toDataURL('image/jpeg', 0.8);
+          __babyDraft.media.push({ type: 'image', data: out });
+          renderBabyDraftList();
+          added++;
+          if (added === total) toast(`📷 已添加 ${added} 张图片`);
+        };
+        img.onerror = () => { __babyDraft.media.push({ type: 'image', data: base }); renderBabyDraftList(); added++; if (added === total) toast(`📷 已添加 ${added} 张图片`); };
+        img.src = base;
+      } else {
+        __babyDraft.media.push({ type: 'video', data: base });
+        renderBabyDraftList();
+        added++;
+        if (added === total) toast('🎥 已添加视频');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
 }
 function delBabyDraftMedia(i) {
   if (!__babyDraft) return;
@@ -3312,6 +3370,10 @@ function renderMore() {
     <button class="sub-tab ${sub === 'bag' ? 'active' : ''}" onclick="setSubTab('more','bag')">🎒 出门清单</button>
     <button class="sub-tab ${sub === 'trip' ? 'active' : ''}" onclick="setSubTab('more','trip')">📅 行程日程</button>
     <button class="sub-tab ${sub === 'share' ? 'active' : ''}" onclick="setSubTab('more','share')">💄 好物分享</button>
+    <button class="sub-tab ${sub === 'homegood' ? 'active' : ''}" onclick="setSubTab('more','homegood')">🏡 家居好物</button>
+    <button class="sub-tab ${sub === 'beauty' ? 'active' : ''}" onclick="setSubTab('more','beauty')">💋 变美tips</button>
+    <button class="sub-tab ${sub === 'babyitem' ? 'active' : ''}" onclick="setSubTab('more','babyitem')">🍼 宝宝好物</button>
+    <button class="sub-tab ${sub === 'ootd' ? 'active' : ''}" onclick="setSubTab('more','ootd')">👗 OOTD</button>
     <button class="sub-tab ${sub === 'cloth' ? 'active' : ''}" onclick="setSubTab('more','cloth')">👕 衣物</button>
     <button class="sub-tab ${sub === 'consumable' ? 'active' : ''}" onclick="setSubTab('more','consumable')">🧴 消耗品</button>
     <button class="sub-tab ${sub === 'shop' ? 'active' : ''}" onclick="setSubTab('more','shop')">🛒 待购物</button>
@@ -3331,8 +3393,13 @@ function renderMore() {
   else if (sub === 'sudden') body = renderTips('sudden');
   else if (sub === 'life') body = renderTips('life');
   else if (sub === 'data') body = renderData();
-  // 行程/待购物/tips/拉屎/数据 有自己的按钮，不显示默认+号
-  if (sub === 'poop' || sub === 'data' || sub === 'sudden' || sub === 'life' || sub === 'shop') return tabs + body;
+  else if (sub === 'homegood') body = renderShare2('homegood');
+  else if (sub === 'beauty') body = renderShare2('beauty');
+  else if (sub === 'babyitem') body = renderShare2('babyitem');
+  else if (sub === 'ootd') body = renderShare2('ootd');
+  // 行程/待购物/tips/拉屎/数据 + 新4个分享（它们有自己的+按钮） 不显示默认+号
+  const hiddenFab = ['poop','data','sudden','life','shop','homegood','beauty','babyitem','ootd'];
+  if (hiddenFab.includes(sub)) return tabs + body;
   return tabs + body + `<button class="fab" onclick="addMore('${sub}')">+</button>`;
 }
 function addMore(sub) {
@@ -4209,8 +4276,12 @@ function renderTips(type) {
     <div class="card-title"><span class="title-left">${icon} ${title}</span><span class="count-badge">${list.length} 条</span></div>
     <div class="tips-input-row">
       <input class="input tips-input" id="tipInput_${type}" placeholder="${placeholder}" onkeydown="if(event.key==='Enter')addTip('${type}')" />
+      <label class="btn btn-ghost btn-sm" title="加图片">📷
+        <input type="file" accept="image/*" style="display:none" onchange="previewTipImg(this,'${type}')">
+      </label>
       <button class="btn" onclick="addTip('${type}')">添加</button>
     </div>
+    <div id="tipImgPrev_${type}" class="tips-img-preview"></div>
   </div>`;
   if (!list.length) {
     h += `<div class="empty-state">${icon} 还没有记录，想到什么随时写下来～</div>`;
@@ -4222,6 +4293,7 @@ function renderTips(type) {
     const realIdx = list.length - 1 - idx;
     h += `<div class="tip-item ${isSudden ? 'tip-sudden' : 'tip-life'}">
       <div class="tip-text">${escapeHtml(t.text)}</div>
+      ${t.img ? `<div class="tip-img-wrap" onclick="viewTipImg('${type}',${realIdx})"><img src="${t.img}" alt="" loading="lazy"></div>` : ''}
       <div class="tip-meta">
         <span class="tip-date">📅 ${t.date} ${t.time || ''}</span>
         <span class="tip-actions">
@@ -4234,16 +4306,64 @@ function renderTips(type) {
   h += '</div>';
   return h;
 }
+// tips 图片预览（添加时）
+function previewTipImg(input, type) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const prev = $(`#tipImgPrev_${type}`);
+  if (!prev) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    // 压缩图片（最长边 1000，JPEG 0.75）
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1000;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) {
+        const r = Math.min(MAX / w, MAX / h);
+        w = Math.round(w * r); h = Math.round(h * r);
+      }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.75);
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${out}"><button class="tip-prev-del" onclick="clearTipImg('${type}')">×</button></div>`;
+      prev.dataset.img = out;
+    };
+    img.onerror = () => {
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${e.target.result}"><button class="tip-prev-del" onclick="clearTipImg('${type}')">×</button></div>`;
+      prev.dataset.img = e.target.result;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearTipImg(type) {
+  const prev = $(`#tipImgPrev_${type}`);
+  if (prev) { prev.innerHTML = ''; delete prev.dataset.img; }
+}
+function viewTipImg(type, idx) {
+  const list = type === 'sudden' ? Store.getTipsSudden() : Store.getTipsLife();
+  const t = list[idx];
+  if (t && t.img) {
+    openModal(`<div class="modal-head"><h3>图片预览</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+      <img src="${t.img}" style="width:100%;border-radius:10px" />`);
+  }
+}
 function addTip(type) {
   const inputId = `tipInput_${type}`;
   const el = document.getElementById(inputId);
   const text = (el?.value || '').trim();
   if (!text) { toast('请先写点什么'); return; }
+  const prev = $(`#tipImgPrev_${type}`);
+  const img = (prev && prev.dataset.img) || '';
   const list = type === 'sudden' ? Store.getTipsSudden() : Store.getTipsLife();
   const now = new Date();
   list.push({
     id: uid(),
     text,
+    img,
     date: D.today(),
     time: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0')
   });
@@ -4258,17 +4378,63 @@ function editTip(type, idx) {
   openModal(`<div class="modal-card">
     <h3>✏️ 编辑 ${type === 'sudden' ? '灵感' : '生活tip'}</h3>
     <div class="field"><textarea class="textarea" id="editTipText" rows="4">${escapeHtml(t.text)}</textarea></div>
+    <div class="field"><label>图片</label>
+      <div id="editTipImgPrev" class="tips-img-preview">${t.img ? `<div class="tip-prev-item"><img src="${t.img}"><button class="tip-prev-del" onclick="clearEditTipImg()">×</button></div>` : ''}</div>
+      <label class="btn btn-ghost btn-sm" title="换图片">📷
+        <input type="file" accept="image/*" style="display:none" onchange="previewEditTipImg(this)">
+      </label>
+      ${t.img ? '<span style="font-size:11px;color:var(--text-light);margin-left:6px">点×可删图</span>' : ''}
+    </div>
     <div class="row">
       <button class="btn btn-ghost" onclick="closeModal()">取消</button>
       <button class="btn" onclick="saveTip('${type}', ${idx})">保存</button>
     </div>
   </div>`);
 }
+function previewEditTipImg(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const prev = $('#editTipImgPrev');
+  if (!prev) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1000;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.75);
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${out}"><button class="tip-prev-del" onclick="clearEditTipImg()">×</button></div>`;
+      prev.dataset.img = out;
+    };
+    img.onerror = () => {
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${e.target.result}"><button class="tip-prev-del" onclick="clearEditTipImg()">×</button></div>`;
+      prev.dataset.img = e.target.result;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearEditTipImg() {
+  const prev = $('#editTipImgPrev');
+  if (prev) { prev.innerHTML = ''; prev.dataset.img = ''; }
+}
 function saveTip(type, idx) {
   const text = ($('#editTipText')?.value || '').trim();
   if (!text) { toast('内容不能为空'); return; }
   const list = type === 'sudden' ? Store.getTipsSudden() : Store.getTipsLife();
+  const prev = $('#editTipImgPrev');
+  // dataset.img === '' 表示用户主动删了图；undefined 表示没动过
+  let img = list[idx].img;
+  if (prev && prev.dataset && prev.dataset.img !== undefined) {
+    img = prev.dataset.img;
+  }
   list[idx].text = text;
+  list[idx].img = img;
   if (type === 'sudden') Store.setTipsSudden(list); else Store.setTipsLife(list);
   toast('✅ 已保存');
   closeModal();
@@ -4283,6 +4449,291 @@ function delTip(type, idx) {
   render();
 }
 
+// ========= 4 个分享模块（家居好物/变美/宝宝好物/OOTD） =========
+const SHARE2_META = {
+  homegood: {
+    icon: '🏡', title: '家居好物', placeholder: '记录心动的家居小物…',
+    className: 'card-bg-homegood',
+    get: () => Store.getHomeGoods(), set: (v) => Store.setHomeGoods(v)
+  },
+  beauty: {
+    icon: '💋', title: '变美小tips', placeholder: '护肤/化妆/身材管理心得…',
+    className: 'card-bg-beauty',
+    get: () => Store.getBeautyTips(), set: (v) => Store.setBeautyTips(v)
+  },
+  babyitem: {
+    icon: '🍼', title: '宝宝好物', placeholder: '给宝宝的囤货、买后心得、踩雷提醒…',
+    className: 'card-bg-babyitem',
+    get: () => Store.getBabyItems(), set: (v) => Store.setBabyItems(v)
+  },
+  ootd: {
+    icon: '👗', title: 'OOTD分享', placeholder: '今天穿了什么，写点搭配心得…',
+    className: 'card-bg-ootd',
+    get: () => Store.getOOTDs(), set: (v) => Store.setOOTDs(v)
+  }
+};
+function renderShare2(type) {
+  const meta = SHARE2_META[type];
+  if (!meta) return '';
+  const list = meta.get();
+  let h = `<div class="card tips-card ${meta.className}">
+    <div class="card-title"><span class="title-left">${meta.icon} ${meta.title}</span><span class="count-badge">${list.length} 条</span></div>
+    <div class="tips-input-row">
+      <input class="input tips-input" id="s2Input_${type}" placeholder="${meta.placeholder}" onkeydown="if(event.key==='Enter')addShare2('${type}')" />
+      <label class="btn btn-ghost btn-sm" title="加图片">📷
+        <input type="file" accept="image/*" style="display:none" onchange="previewS2Img(this,'${type}')">
+      </label>
+      <button class="btn" onclick="addShare2('${type}')">添加</button>
+    </div>
+    <div id="s2ImgPrev_${type}" class="tips-img-preview"></div>
+  </div>`;
+  if (!list.length) {
+    h += `<div class="empty-state">${meta.icon} 还没有记录～记录一下心动好物吧</div>`;
+    return h;
+  }
+  h += '<div class="tips-list">';
+  list.slice().reverse().forEach((t, idx) => {
+    const realIdx = list.length - 1 - idx;
+    h += `<div class="tip-item ${meta.className.replace('card-bg-','tip-share-')}">
+      ${t.img ? `<div class="tip-img-wrap" onclick="viewS2Img('${type}',${realIdx})"><img src="${t.img}" alt="" loading="lazy"></div>` : ''}
+      <div class="tip-text">${escapeHtml(t.title || '')}</div>
+      ${t.text ? `<div class="tip-sub">${escapeHtml(t.text)}</div>` : ''}
+      <div class="tip-meta">
+        <span class="tip-date">📅 ${t.date} ${t.time || ''}</span>
+        <span class="tip-actions">
+          <button class="btn btn-sm btn-ghost" onclick="editShare2('${type}', ${realIdx})">✏️ 编辑</button>
+          <button class="btn btn-sm btn-danger" onclick="delShare2('${type}', ${realIdx})">🗑</button>
+        </span>
+      </div>
+    </div>`;
+  });
+  h += '</div>';
+  return h;
+}
+function previewS2Img(input, type) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const prev = $(`#s2ImgPrev_${type}`);
+  if (!prev) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1200;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.8);
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${out}"><button class="tip-prev-del" onclick="clearS2Img('${type}')">×</button></div>`;
+      prev.dataset.img = out;
+    };
+    img.onerror = () => {
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${e.target.result}"><button class="tip-prev-del" onclick="clearS2Img('${type}')">×</button></div>`;
+      prev.dataset.img = e.target.result;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearS2Img(type) {
+  const prev = $(`#s2ImgPrev_${type}`);
+  if (prev) { prev.innerHTML = ''; delete prev.dataset.img; }
+}
+function viewS2Img(type, idx) {
+  const meta = SHARE2_META[type];
+  if (!meta) return;
+  const t = meta.get()[idx];
+  if (t && t.img) {
+    openModal(`<div class="modal-head"><h3>图片预览</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+      <img src="${t.img}" style="width:100%;border-radius:10px" />`);
+  }
+}
+function addShare2(type) {
+  const meta = SHARE2_META[type];
+  if (!meta) return;
+  const el = document.getElementById(`s2Input_${type}`);
+  const title = (el?.value || '').trim();
+  if (!title) { toast('请先写点什么'); return; }
+  const prev = $(`#s2ImgPrev_${type}`);
+  const img = (prev && prev.dataset.img) || '';
+  const list = meta.get();
+  const now = new Date();
+  list.push({
+    id: uid(),
+    title,
+    text: '',
+    img,
+    date: D.today(),
+    time: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')
+  });
+  meta.set(list);
+  toast('✅ 已添加');
+  render();
+}
+function editShare2(type, idx) {
+  const meta = SHARE2_META[type];
+  if (!meta) return;
+  const list = meta.get();
+  const t = list[idx];
+  if (!t) return;
+  openModal(`<div class="modal-card">
+    <h3>✏️ 编辑 ${meta.title}</h3>
+    <div class="field"><label>标题</label><input class="input" id="s2EditTitle" value="${escapeAttr(t.title || '')}" /></div>
+    <div class="field"><label>详细心得/说明</label><textarea class="textarea" id="s2EditText" rows="4" placeholder="可选">${escapeHtml(t.text || '')}</textarea></div>
+    <div class="field"><label>图片</label>
+      <div id="s2EditImgPrev" class="tips-img-preview">${t.img ? `<div class="tip-prev-item"><img src="${t.img}"><button class="tip-prev-del" onclick="clearEditS2Img()">×</button></div>` : ''}</div>
+      <label class="btn btn-ghost btn-sm">📷
+        <input type="file" accept="image/*" style="display:none" onchange="previewEditS2Img(this)">
+      </label>
+      ${t.img ? '<span style="font-size:11px;color:var(--text-light);margin-left:6px">点×可删图</span>' : ''}
+    </div>
+    <div class="row">
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+      <button class="btn" onclick="saveShare2('${type}', ${idx})">保存</button>
+    </div>
+  </div>`);
+}
+function previewEditS2Img(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const prev = $('#s2EditImgPrev');
+  if (!prev) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1200;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const out = cv.toDataURL('image/jpeg', 0.8);
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${out}"><button class="tip-prev-del" onclick="clearEditS2Img()">×</button></div>`;
+      prev.dataset.img = out;
+    };
+    img.onerror = () => {
+      prev.innerHTML = `<div class="tip-prev-item"><img src="${e.target.result}"><button class="tip-prev-del" onclick="clearEditS2Img()">×</button></div>`;
+      prev.dataset.img = e.target.result;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearEditS2Img() {
+  const prev = $('#s2EditImgPrev');
+  if (prev) { prev.innerHTML = ''; prev.dataset.img = ''; }
+}
+function saveShare2(type, idx) {
+  const meta = SHARE2_META[type];
+  if (!meta) return;
+  const title = ($('#s2EditTitle')?.value || '').trim();
+  if (!title) { toast('标题不能为空'); return; }
+  const text = ($('#s2EditText')?.value || '').trim();
+  const list = meta.get();
+  const prev = $('#s2EditImgPrev');
+  let img = list[idx].img;
+  if (prev && prev.dataset && prev.dataset.img !== undefined) {
+    img = prev.dataset.img;
+  }
+  list[idx].title = title;
+  list[idx].text = text;
+  list[idx].img = img;
+  meta.set(list);
+  toast('✅ 已保存');
+  closeModal();
+  render();
+}
+function delShare2(type, idx) {
+  if (!confirm('删除这条？')) return;
+  const meta = SHARE2_META[type];
+  if (!meta) return;
+  const list = meta.get();
+  list.splice(idx, 1);
+  meta.set(list);
+  toast('🗑 已删除');
+  render();
+}
+
+// ========= 防焦虑/开心短句 =========
+const HAPPY_QUOTES = [
+  '今天的你也很棒哦，不用跟别人比 🌸',
+  '慢慢来，比较快。相信自己的节奏 🌈',
+  '你已经很努力了，先抱抱自己吧 🤗',
+  '人生不是竞赛，开心最重要 ✨',
+  '做自己喜欢的事，就是治愈一切的良药 🎀',
+  '允许一切发生，接受不完美的自己 🌷',
+  '今天也是被爱包围的一天呢 💗',
+  '没关系的，做错事也没关系，下次就好 🍀',
+  '你不需要很厉害才开始，开始了才会变厉害 🌱',
+  '你的感受是最重要的，别委屈自己 💫',
+  '多爱自己一点，你值得一切美好 🍑',
+  '哪怕什么都不做，活着本身就已经很棒啦 🌙',
+  '小小的进步也值得庆祝呀 🎉',
+  '能接受自己脆弱的人，才是真的勇敢 💪',
+  '吃点好吃的，睡一觉，明天又是新的一天 🍰',
+  '生活有裂缝，阳光才能照进来 🌞',
+  '你比你想象的更坚强，也比自己以为的更优秀 🏆',
+  '偶尔躺平一下也没关系，允许自己休息 😴',
+  '只要今天比昨天快乐一点点，就是大成功呀 🎊',
+  '永远相信，美好的事情即将发生 ✨',
+  '宝宝爱你，你是全世界最可爱的人呀 💕',
+  '把坏情绪交给甜品和热牛奶 🥛🍮',
+  '不用急着长大，慢慢来也没关系 🧸',
+  '有人喜欢你本来的样子哦 🌟',
+  '今天也要加油鸭，但不加油也没关系鸭 🦆',
+  '你现在觉得困难的事，总有一天会笑着说出来 😊',
+  '生活不会辜负每一个认真努力的人 🌻',
+  '做自己就够啦，已经够好的啦 💝',
+  '你的存在本身就是一件好事呀 🌿',
+  '愿你今天也被温柔以待 💖',
+  '所有的美好都会在最后相遇，如果不美好，说明还没到最后 🌅',
+  '深呼吸，一切都会过去的 🍃',
+  '抬头看天空，今天的云也很美呢 ☁️',
+  '你已经很优秀啦，别人说什么都不重要 💎',
+  '人生没有白走的路，每一步都算数 👣',
+  '今天要做两件事：开心 + 爱自己 🎈',
+  '即使平凡，也是限量版的一天呀 🥰',
+  '该吃吃该睡睡，别的事别往心里搁 🍜',
+  '你是独一无二的呀，超级珍贵 ✨🍑',
+  '所有的辛苦都值得，都会熬过去的 🌈💪'
+];
+// 根据今天日期选一句，同一天同一个用户看到的句子固定不变（刷新变化）
+function getDailyHappyQuote() {
+  // 两种模式：daily（按日期固定，一天一句） 或 random（每次刷新随机）
+  // 这里默认 80% 每日一句 + 20% 每次刷新变化
+  const modeKey = 'happyQuoteMode';
+  const mode = DB.get(modeKey, null) || 'daily'; // 'daily' 或 'random'
+  if (mode === 'random') {
+    const i = Math.floor(Math.random() * HAPPY_QUOTES.length);
+    return HAPPY_QUOTES[i];
+  }
+  // daily: 用今天日期+索引偏移量，每天固定一句
+  const today = D.today();
+  const idxStr = DB.get('happyQuoteIdx', '0');
+  let offset = parseInt(idxStr, 10) || 0;
+  // 字符串化日期算一个基础索引（保证每7天循环一轮）
+  const dateNum = parseInt(today.replace(/-/g, ''), 10);
+  const i = (dateNum + offset) % HAPPY_QUOTES.length;
+  return HAPPY_QUOTES[i];
+}
+// 在首页点击换一句
+function switchHappyQuote(mode) {
+  if (mode === 'random') {
+    DB.set('happyQuoteMode', 'random');
+  } else if (mode === 'daily') {
+    DB.set('happyQuoteMode', 'daily');
+    // 偏移+1，换另一句
+    const offset = parseInt(DB.get('happyQuoteIdx', '0') || '0', 10);
+    DB.set('happyQuoteIdx', String((offset + 1) % HAPPY_QUOTES.length));
+  }
+  render();
+}
+
 // ========= 数据管理（导出/导入/清空） =========
 // 所有持久化数据键
 const DATA_KEYS = [
@@ -4290,7 +4741,7 @@ const DATA_KEYS = [
   'weights', 'bags', 'shares', 'clothes', 'consumables', 'routine',
   'sleepTarget', 'sleepList', 'babySleep', 'ledgers', 'poops',
   'tipsSudden', 'tipsLife', 'shop', 'notifyEnabled', 'notifyTimes',
-  'babyCats', 'trips'
+  'babyCats', 'trips', 'homeGoods', 'beautyTips', 'babyItems', 'ootds'
 ];
 function renderData() {
   // 统计各模块数据量
@@ -4305,7 +4756,7 @@ function renderData() {
       }},
     { icon: '💊', label: '用药清单', get: () => Store.getMedList().length + ' 项' },
     { icon: '💰', label: '账目记录', get: () => Store.getAccounts().length + ' 条' },
-    { icon: '📦', label: '买卖记录', get: () => Store.getTrades().length + ' 条' },
+    { icon: '📦', label: '出闲置', get: () => Store.getTrades().length + ' 条' },
     { icon: '👶', label: '宝宝成长', get: () => Store.getBaby().length + ' 条' },
     { icon: '⚖️', label: '体重', get: () => Store.getWeights().length + ' 条' },
     { icon: '😴', label: '宝宝睡眠', get: () => Store.getBabySleep().length + ' 天' },
@@ -4335,16 +4786,21 @@ function renderData() {
     <div class="data-actions">
       <button class="btn btn-block" onclick="exportData()">📤 导出全部数据（JSON）</button>
       <button class="btn btn-ghost btn-block" onclick="$('#importFile').click()">📥 导入数据（覆盖现有）</button>
+      <button class="btn btn-ghost btn-block" style="background:linear-gradient(135deg,#e8f4ff,#f0fbff);border-color:#bcdcff;color:#1a6dba" onclick="$('#importMergeFile').click()">🔀 合并导入（不覆盖，只补缺）</button>
       <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importData(this)">
+      <input type="file" id="importMergeFile" accept=".json,application/json" style="display:none" onchange="importDataMerge(this)">
       <button class="btn btn-danger btn-block" onclick="clearAllData()">🗑 清空全部数据</button>
     </div>
-    <div class="data-tip">💡 导出的 JSON 文件包含所有打卡、账目、记录。换手机/浏览器时用「导入」恢复。建议每周导出一次做备份。</div>
+    <div class="data-tip">
+      💡 <b>覆盖导入</b>：用备份文件整体替换当前数据（旧数据全没）。<br>
+      🔀 <b>合并导入</b>：只在当前数据基础上补充缺失的记录，相同记录保留当前版本，不会丢任何当前数据。适合从旧备份里找回某些条目。
+    </div>
   </div>
   <div class="card"><div class="card-title"><span class="title-left">🔄 应用更新</span></div>
     <div class="data-actions" style="gap:6px">
       <div class="app-ver-row">
         <div class="app-ver-label">当前版本</div>
-        <div class="app-ver-val" id="appVerVal">v29 · ${new Date().toLocaleDateString('zh-CN')}</div>
+        <div class="app-ver-val" id="appVerVal">v32 · ${new Date().toLocaleDateString('zh-CN')}</div>
       </div>
       <button class="btn btn-block" style="background:linear-gradient(135deg,#ff7ab0,#ff9fc6);color:#fff;border-color:#ff7ab0" onclick="downloadApp()">⬇️ 下载最新版APP（单文件离线版）</button>
       <button class="btn btn-block" onclick="checkAppUpdate()">🔍 检查更新（立即联网）</button>
@@ -4358,7 +4814,7 @@ function renderData() {
 // ========= 下载APP（稳定版）：先弹窗，再用 fetch+blob 同源下载，避免 a[download] 把当前页面顶没 =========
 function downloadApp() {
   const localName = '甜酱日常.html';
-  const versionStamp = 'v29';
+  const versionStamp = 'v32';
   const url = new URL(localName, location.href).toString();
   const saveName = `甜酱日常-${versionStamp}.html`;
 
@@ -4564,11 +5020,12 @@ function _doExport(forWeChat) {
 function importData(input) {
   const file = input.files[0];
   if (!file) return;
+  input.value = '';
   const reader = new FileReader();
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!confirm('导入将覆盖现有全部数据，确定继续？')) return;
+      if (!confirm('导入将覆盖现有全部数据，确定继续？\n\n提示：如不想覆盖，请用「🔀 合并导入」按钮。')) return;
       // 先清空旧数据
       DATA_KEYS.forEach(k => { try { localStorage.removeItem('tj_' + k); } catch (err) {} });
       // 写入新数据
@@ -4584,6 +5041,84 @@ function importData(input) {
     } catch (err) {
       toast('❌ 导入失败：文件格式错误');
       alert('导入失败，请选择正确的备份 JSON 文件');
+    }
+  };
+  reader.readAsText(file);
+}
+// 合并导入：不覆盖，只把备份中本地缺失的记录补进来；冲突时保留当前数据
+// - 数组类型：按 id 去重合并（备份中本地没有的 id 加入；同 id 保留本地）
+// - 字典类型（days/weekly/monthly）：按 key 合并，备份中本地没有的 key 加进来
+// - 标量/小对象：保留本地
+function importDataMerge(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm('🔀 合并导入：\n\n· 只把备份里【本地没有】的记录补进来\n· 相同记录（id 相同）保留当前版本\n· 当前数据不会被覆盖\n\n确定继续吗？')) return;
+      // 判断每个 key 是数组、对象、还是标量
+      // 数组型：按 id 去重合并
+      const ARRAY_KEYS_WITH_ID = ['medList','accounts','trades','baby','weights','bags',
+        'shares','clothes','consumables','routine','sleepList','babySleep',
+        'poops','tipsSudden','tipsLife','shop','notifyTimes','babyCats','trips',
+        'homeGoods','beautyTips','babyItems','ootds'];
+      // 字典型（按 key 合并）
+      const DICT_KEYS = ['days','weekly','monthly'];
+      let added = 0;       // 新增的条目数
+      let kept = 0;        // 冲突中保留本地的条目数
+      let keysTouched = 0;
+      ARRAY_KEYS_WITH_ID.forEach(k => {
+        const backupArr = Array.isArray(data[k]) ? data[k] : null;
+        if (!backupArr) return;
+        const cur = DB.get(k, []);
+        const arr = Array.isArray(cur) ? cur.slice() : [];
+        const idSet = new Set(arr.filter(x => x && x.id).map(x => x.id));
+        backupArr.forEach(item => {
+          // 没 id 的项（旧版数据可能），按内容简易去重
+          if (!item || !item.id) {
+            const exists = arr.some(x => JSON.stringify(x) === JSON.stringify(item));
+            if (!exists) { arr.push(item); added++; }
+            else kept++;
+            return;
+          }
+          if (idSet.has(item.id)) { kept++; return; }
+          arr.push(item); idSet.add(item.id); added++;
+        });
+        DB.set(k, arr);
+        keysTouched++;
+      });
+      DICT_KEYS.forEach(k => {
+        const backupObj = data[k] && typeof data[k] === 'object' ? data[k] : null;
+        if (!backupObj) return;
+        const cur = DB.get(k, {});
+        const obj = (cur && typeof cur === 'object') ? { ...cur } : {};
+        Object.keys(backupObj).forEach(key => {
+          if (!(key in obj)) { obj[key] = backupObj[key]; added++; }
+          else kept++;
+        });
+        DB.set(k, obj);
+        keysTouched++;
+      });
+      // 其他标量型 key：保留本地（不动），但若本地为空则用备份
+      DATA_KEYS.forEach(k => {
+        if (ARRAY_KEYS_WITH_ID.includes(k) || DICT_KEYS.includes(k)) return;
+        if (data[k] === undefined || data[k] === null) return;
+        const cur = DB.get(k, null);
+        if (cur === null || cur === undefined ||
+            (Array.isArray(cur) && cur.length === 0) ||
+            (typeof cur === 'object' && !Array.isArray(cur) && cur !== null && Object.keys(cur).length === 0)) {
+          DB.set(k, data[k]);
+          added++;
+          keysTouched++;
+        }
+      });
+      toast(`🔀 合并完成：新增 ${added} 条 · 保留 ${kept} 条 · 涉及 ${keysTouched} 项`);
+      setTimeout(() => location.reload(), 800);
+    } catch (err) {
+      toast('❌ 合并导入失败：文件格式错误');
+      alert('合并导入失败，请选择正确的备份 JSON 文件');
     }
   };
   reader.readAsText(file);
