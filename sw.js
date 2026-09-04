@@ -1,5 +1,5 @@
 // 甜酱日常 Service Worker - 离线缓存
-const CACHE = 'tianjiang-v29';
+const CACHE = 'tianjiang-v32';
 const ASSETS = [
   './',
   './index.html',
