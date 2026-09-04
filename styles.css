@@ -805,8 +805,8 @@ html, body {
   color: var(--pink);
 }
 .cal-cell {
-  aspect-ratio: 1 / 1.4;
-  min-height: 62px;
+  aspect-ratio: 1 / 1.65;
+  min-height: 96px;
   border-radius: 10px;
   padding: 6px 7px;
   background: var(--pink-soft);
@@ -821,6 +821,8 @@ html, body {
 .cal-cell.empty {
   background: transparent;
   cursor: default;
+  min-height: 0;
+  aspect-ratio: auto;
 }
 .cal-cell.empty:active { transform: none; }
 .cal-cell.today {
@@ -848,10 +850,11 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   white-space: normal;
   word-break: break-all;
+  flex: 1;
 }
 .cal-count {
   position: absolute;
@@ -1477,6 +1480,24 @@ html, body {
 }
 .tip-date { opacity: 0.8; }
 .tip-actions { display: flex; gap: 6px; }
+/* tips 图片预览（添加/编辑时） */
+.tips-img-preview { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tip-prev-item { position: relative; width: 72px; height: 72px; }
+.tip-prev-item img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow); }
+.tip-prev-del {
+  position: absolute; top: -4px; right: -4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--red, #ff4d4f); color: #fff;
+  font-size: 14px; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+/* tips 列表里的图片 */
+.tip-img-wrap { margin: 6px 0; }
+.tip-img-wrap img {
+  max-width: 100%; max-height: 240px;
+  border-radius: 10px; box-shadow: var(--shadow);
+  cursor: pointer; display: block;
+}
 .count-badge {
   font-size: 11px;
   color: var(--pink-deep);
@@ -2094,3 +2115,101 @@ html, body {
   background: var(--pink-mint);
   color: var(--text-light);
 }
+
+/* ========== 每日防焦虑开心句子 ========== */
+.happy-quote-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #ffe4f0 0%, #fff3e0 50%, #e8f4ff 100%);
+  box-shadow: 0 4px 14px rgba(255, 178, 198, 0.22);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s;
+  user-select: none;
+}
+.happy-quote-card:active { transform: scale(0.99); }
+.hq-emoji {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.hq-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6a4a5e;
+  line-height: 1.5;
+}
+.hq-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.hq-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  color: #c97a9a;
+  font-size: 14px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(255, 158, 192, 0.15);
+}
+.hq-btn:hover { background: #fff; }
+
+/* ========== 4 个分享模块配色 ========== */
+/* 家居好物 */
+.card-bg-homegood {
+  background: linear-gradient(135deg, #fffaf0, #eef7ea);
+  border: 1px solid #e4e9d6;
+}
+.tip-share-homegood {
+  background: #fffdf6;
+  border-left: 3px solid #c4d9a5;
+}
+/* 变美小tips */
+.card-bg-beauty {
+  background: linear-gradient(135deg, #fff0f5, #fbe8ff);
+  border: 1px solid #f4d9e9;
+}
+.tip-share-beauty {
+  background: #fff6fb;
+  border-left: 3px solid #e6a3cd;
+}
+/* 宝宝好物 */
+.card-bg-babyitem {
+  background: linear-gradient(135deg, #fff8ed, #e9f4ff);
+  border: 1px solid #ecdfd1;
+}
+.tip-share-babyitem {
+  background: #fffbf5;
+  border-left: 3px solid #ffc58b;
+}
+/* OOTD */
+.card-bg-ootd {
+  background: linear-gradient(135deg, #f2ecff, #fff3e8);
+  border: 1px solid #e6dcf3;
+}
+.tip-share-ootd {
+  background: #fcf8ff;
+  border-left: 3px solid #b39bde;
+}
+
+/* tip-sub：分享卡片标题下面的详细说明文字 */
+.tip-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #967b89;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 分享列表卡片头像大小调整 */
